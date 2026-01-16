@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public final class ExampleAuto {
   /** Example static factory for an autonomous command. */
   // public static Command exampleAuto(ExampleSubsystem subsystem) {
-  //   return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
+  // return Commands.sequence(subsystem.exampleMethodCommand(), new
+  // ExampleCommand(subsystem));
   // }
 
   private ExampleAuto() {
