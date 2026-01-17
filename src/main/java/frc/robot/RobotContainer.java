@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -51,7 +52,9 @@ public class RobotContainer {
       () -> driverXbox.getLeftX() * -1)
       .withControllerRotationAxis(driverXbox::getRightX)
       .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(OperatorConstants.DRIVER_CONTROLLER_JOYSTICK_SCALER)
+      .scaleTranslation(OperatorConstants.MIN_INPUTTED_SPEED + 
+      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * driverXbox.getLeftTriggerAxis() +
+      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis())
       .allianceRelativeControl(true);
 
   /**
@@ -103,10 +106,22 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the trigger bindings
+    configureSwerveSlewRateLimits();
     configureBindings();
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
+  private void configureSwerveSlewRateLimits() {
+    drivebase.getSwerveController().addSlewRateLimiters(
+       // Translation X accel (m/s²)
+        new SlewRateLimiter(Constants.MAX_TRANSLATION_ACCELERATION),
+
+        // Translation Y accel (m/s²)
+        new SlewRateLimiter(Constants.MAX_TRANSLATION_ACCELERATION),
+
+        // Rotation accel (rad/s²)
+        new SlewRateLimiter(Constants.MAX_ROTATION_ACCELERATION));
+  }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -181,10 +196,10 @@ public class RobotContainer {
       driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
 
 
-      // driverXbox.b().whileTrue(
-      // drivebase.driveToPose(
-      // new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-      // );
+      driverXbox.b().whileTrue(
+      drivebase.driveToPose(
+      new Pose2d(new Translation2d(1, 0), Rotation2d.fromDegrees(0)))
+      );
     }
 
   }
