@@ -22,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
+import frc.robot.subsystems.Climber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -38,6 +39,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
+
+  private final Climber climber = new Climber();
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
@@ -174,6 +177,9 @@ public class RobotContainer {
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+      driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+
 
       // driverXbox.b().whileTrue(
       // drivebase.driveToPose(

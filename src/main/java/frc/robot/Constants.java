@@ -70,4 +70,9 @@ public final class Constants {
     public static final double maximumAmbiguity = 0.25;
 
   }
+
+  public static class ClimberConstants{
+    public static final double CLIMBER_SPEED = 0.01; // Adjust as necessary
+    public static final int climberMotorPort = 31;
+  }
 }
