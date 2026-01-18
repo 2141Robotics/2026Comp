@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Disrupt Middle"
+            "pathName": "Shoot Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Climb Middle"
           }
         }
       ]
