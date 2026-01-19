@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,13 +18,18 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.function.DoubleSupplier;
+
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.Climber;
 
@@ -41,29 +49,51 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
 
-  private final Climber climber = new Climber();
+  //private final Climber climber = new Climber();
+  
+  private final SendableChooser<Command> autoChooser;
+
+  
+  
+  DoubleSupplier leftX = () ->
+    MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND);
+  DoubleSupplier leftY = () ->
+    MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND);
+
+  DoubleSupplier rightX = () ->
+    MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.DEADBAND);
+
+DoubleSupplier rightY = () ->
+    MathUtil.applyDeadband(driverXbox.getRightY(), OperatorConstants.DEADBAND);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-      () -> driverXbox.getLeftY() * -1,
-      () -> driverXbox.getLeftX() * -1)
-      .withControllerRotationAxis(driverXbox::getRightX)
-      .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(OperatorConstants.MIN_INPUTTED_SPEED + 
-      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * driverXbox.getLeftTriggerAxis() +
-      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis())
+      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND) * -1 * (OperatorConstants.MIN_INPUTTED_SPEED + 
+      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * (1 - driverXbox.getLeftTriggerAxis()) +
+      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis()),
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND) * -1 * (OperatorConstants.MIN_INPUTTED_SPEED + 
+      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * (1 - driverXbox.getLeftTriggerAxis()) +
+      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis()))
+  .withControllerRotationAxis(() -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.DEADBAND))
       .allianceRelativeControl(true);
+
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative
    * input stream.
    */
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
-      driverXbox::getRightY)
-      .headingWhile(true);
+
+SwerveInputStream driveDirectAngle =
+    driveAngularVelocity.copy()
+        .withControllerHeadingAxis(rightX, rightY)
+        .headingWhile(true);
+  
+  public double test(){
+    return rightX.getAsDouble();
+  }
 
   /**
    * Clone's the angular velocity input stream and converts it to a robotRelative
@@ -106,21 +136,20 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureSwerveSlewRateLimits();
     configureBindings();
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser();
+    initAutomonousChooser();
+    drivebase.zeroGyro();
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
-  private void configureSwerveSlewRateLimits() {
-    drivebase.getSwerveController().addSlewRateLimiters(
-       // Translation X accel (m/s²)
-        new SlewRateLimiter(Constants.MAX_TRANSLATION_ACCELERATION),
+  private void initAutomonousChooser() {
 
-        // Translation Y accel (m/s²)
-        new SlewRateLimiter(Constants.MAX_TRANSLATION_ACCELERATION),
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        // Rotation accel (rad/s²)
-        new SlewRateLimiter(Constants.MAX_ROTATION_ACCELERATION));
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -192,8 +221,8 @@ public class RobotContainer {
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-      driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      //driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      //driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
 
 
       driverXbox.b().whileTrue(
@@ -211,9 +240,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-
-    // TODO Wtf is this
-    return drivebase.getAutonomousCommand("New Auto");
+    return drivebase.getAutonomousCommand(autoChooser.getSelected().getName());
   }
 
   public void setMotorBrake(boolean brake) {

@@ -29,17 +29,13 @@ public final class Constants {
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED = Units.feetToMeters(14.5);
-  public static final double MAX_TRANSLATION_ACCELERATION = 3.0;
-  public static final double MAX_ROTATION_ACCELERATION = 4.0;
-
-  // Maximum speed of the robot in meters per second, used to limit acceleration.
 
   public static final class AutonConstants
   {
   
   public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0,
   0);
-  public static final PIDConstants ANGLE_PID = new PIDConstants(0.4, 0, 0.01);
+  public static final PIDConstants ROTATION_PID = new PIDConstants(0.2, 0, 0);
   }
 
   public static final class DrivebaseConstants {
@@ -64,7 +60,7 @@ public final class Constants {
     public static final double MIN_INPUTTED_SPEED = 0.1;
 
     //Normal speed without any trigger input
-    public static final double NORMAL_INPUTTED_SPEED = 0.4;
+    public static final double NORMAL_INPUTTED_SPEED = 0.3;
 
     //Highest speed the robot will go with bound trigger (right trigger as of 2026) fully pressed
     public static final double MAX_INPUTTED_SPEED = 1.0;
