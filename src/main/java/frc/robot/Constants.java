@@ -6,8 +6,12 @@ package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Meter;
 // import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.math.Matter;
 
@@ -30,12 +34,20 @@ public final class Constants {
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED = Units.feetToMeters(14.5);
 
-  public static final class AutonConstants
-  {
-  
-  public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0,
-  0);
-  public static final PIDConstants ROTATION_PID = new PIDConstants(0.2, 0, 0);
+  public static final class AutonConstants {
+
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0,
+        0);
+    public static final PIDConstants ROTATION_PID = new PIDConstants(0.2, 0, 0);
+
+    public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(1),
+        Meter.of(4)),
+        Rotation2d.fromDegrees(0));
+
+    public static final Pose2d RED_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(16),
+        Meter.of(4)),
+        Rotation2d.fromDegrees(180));
+
   }
 
   public static final class DrivebaseConstants {
@@ -51,26 +63,28 @@ public final class Constants {
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
 
-    //Wtf does this do, maybe turn speed?
+    // Wtf does this do, maybe turn speed?
     public static final double TURN_CONSTANT = 6;
 
     public static final int DRIVE_CONTROLLER_PORT = 0;
 
-    //Lowest speed the robot will go with bound trigger (left trigger as of 2026) fully pressed
+    // Lowest speed the robot will go with bound trigger (left trigger as of 2026)
+    // fully pressed
     public static final double MIN_INPUTTED_SPEED = 0.1;
 
-    //Normal speed without any trigger input
+    // Normal speed without any trigger input
     public static final double NORMAL_INPUTTED_SPEED = 0.3;
 
-    //Highest speed the robot will go with bound trigger (right trigger as of 2026) fully pressed
+    // Highest speed the robot will go with bound trigger (right trigger as of 2026)
+    // fully pressed
     public static final double MAX_INPUTTED_SPEED = 1.0;
 
     public static final double DRIVER_CONTROLLER_JOYSTICK_SCALER = 1.0;
 
   }
 
-  public static class VisionConstants{
-      
+  public static class VisionConstants {
+
     /**
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
@@ -79,7 +93,7 @@ public final class Constants {
 
   }
 
-  public static class ClimberConstants{
+  public static class ClimberConstants {
     public static final double CLIMBER_SPEED = 0.01; // Adjust as necessary
     public static final int climberMotorPort = 31;
   }

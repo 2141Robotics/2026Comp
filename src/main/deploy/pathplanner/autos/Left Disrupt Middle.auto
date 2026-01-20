@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot Middle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Climb Middle"
+            "pathName": "Left Disrupt Middle"
           }
         }
       ]
