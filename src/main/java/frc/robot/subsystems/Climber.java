@@ -26,6 +26,7 @@ public class Climber extends SubsystemBase {
         config.Slot0.kI = 0;
         config.Slot0.kD = 0;
         config.Slot0.kV = 0;
+        limberMotor.getConfigurator().apply(config);
         climberMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
