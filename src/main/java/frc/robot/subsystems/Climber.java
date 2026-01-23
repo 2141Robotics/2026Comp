@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -17,23 +15,18 @@ public class Climber extends SubsystemBase {
     }
 
     private void init() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.Slot0.kP = 80;
-        config.Slot0.kI = 0;
-        config.Slot0.kD = 0;
-        config.Slot0.kV = 0;
-        climberMotor.getConfigurator().apply(config);
         climberMotor.setNeutralMode(NeutralModeValue.Brake);
+        climberMotor.setVoltage(0.0);
     }
 
     public void moveUp() {
-        // setDesiredClimberHeight(desiredClimberHeight + ClimberConstants.CLIMBER_SPEED);
-        climberMotor.setControl(new DutyCycleOut(-1));
+        climberMotor.setVoltage(-ClimberConstants.CLIMBER_SPEED);
+        
     }
 
     public void moveDown() {
-        // setDesiredClimberHeight(desiredClimberHeight - ClimberConstants.CLIMBER_SPEED);
-        climberMotor.setControl(new DutyCycleOut(1));
+        climberMotor.setVoltage(ClimberConstants.CLIMBER_SPEED);
+        
     }
 
     
@@ -41,6 +34,7 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        climberMotor.setControl(new DutyCycleOut(0));
+        
+        climberMotor.setVoltage(0.0);
     }
 }

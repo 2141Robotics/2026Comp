@@ -54,7 +54,7 @@ public class Vision {
    * April Tag Field Layout of the year.
    */
   public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2025ReefscapeAndyMark);
+      AprilTagFields.k2024Crescendo);
   /**
    * Photon Vision Simulation
    */
@@ -139,6 +139,7 @@ public class Vision {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
+
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);
@@ -324,7 +325,7 @@ public class Vision {
     /**
      * Center Camera
      */
-    CENTER_CAM("center",
+    CENTER_CAM("Limelight 2",
         new Rotation3d(0, Units.degreesToRadians(18), 0),
         new Translation3d(Units.inchesToMeters(-4.628),
             Units.inchesToMeters(-10.687),
@@ -517,7 +518,6 @@ public class Vision {
      * empty. This should only be called once
      * per loop.
      *
-     * <p>
      * Also includes updates for the standard deviations, which can (optionally) be
      * retrieved with
      * {@link Cameras#updateEstimationStdDevs}
@@ -544,12 +544,14 @@ public class Vision {
      * @param targets       All targets in this camera frame
      */
     private void updateEstimationStdDevs(
-        Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+      Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
       if (estimatedPose.isEmpty()) {
         // No pose input. Default to single-tag std devs
         curStdDevs = singleTagStdDevs;
 
       } else {
+        System.out.println("Estimated pose present");
+        //TODO Fixme plz
         // Pose present. Start running Heuristic
         var estStdDevs = singleTagStdDevs;
         int numTags = 0;
@@ -560,6 +562,7 @@ public class Vision {
         for (var tgt : targets) {
           var tagPose = poseEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
           if (tagPose.isEmpty()) {
+            System.out.println("Tag pose empty for tag ID " + tgt.getFiducialId());
             continue;
           }
           numTags++;

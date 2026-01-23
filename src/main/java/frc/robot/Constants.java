@@ -94,7 +94,10 @@ public final class Constants {
   }
 
   public static class ClimberConstants {
-    public static final double CLIMBER_SPEED = 0.01; // Adjust as necessary
+    public static final double CLIMBER_SPEED = 2; // Adjust as necessary
     public static final int climberMotorPort = 31;
+    public static final double CLIMBER_CURRENT_HEIGHT = 12.0; // height of starting pos.
+    public static final double CLIMBER_HEIGHT_MAX = 12.0; // max height of climber
+    public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
   }
 }
