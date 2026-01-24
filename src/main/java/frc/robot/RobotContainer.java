@@ -60,7 +60,7 @@ public class RobotContainer {
     MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND);
 
   DoubleSupplier rightX = () ->
-    MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.DEADBAND);
+    MathUtil.applyDeadband(-driverXbox.getRightX(), OperatorConstants.DEADBAND);
 
 DoubleSupplier rightY = () ->
     MathUtil.applyDeadband(driverXbox.getRightY(), OperatorConstants.DEADBAND);
@@ -76,7 +76,7 @@ DoubleSupplier rightY = () ->
       () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND) * -1 * (OperatorConstants.MIN_INPUTTED_SPEED + 
       (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * (1 - driverXbox.getLeftTriggerAxis()) +
       (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis()))
-  .withControllerRotationAxis(() -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.DEADBAND))
+  .withControllerRotationAxis(() -> rightX.getAsDouble())
       .allianceRelativeControl(true);
 
 
