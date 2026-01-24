@@ -526,23 +526,12 @@ public class Vision {
      *         estimation.
      */
 
-    private double t = 0;
     private void updateEstimatedGlobalPose() {
       Optional<EstimatedRobotPose> visionEst = Optional.empty();
       for (var change : resultsList) {
-        // System.out.println("Processing a target Y/N: " + change.hasTargets());
         visionEst = poseEstimator.update(change);
-        if(visionEst.isEmpty()){
-          System.out.println("Estimated Pose is empty");
-        }if(change.getTimestampSeconds() == t){
-          System.out.println("Empty Pose b/c same timestamp as before");
-        }if(!change.hasTargets()){
-          System.out.println("Empty Pose b/c no targets");
-        }
-        t = change.getTimestampSeconds();
         updateEstimationStdDevs(visionEst, change.getTargets());
       }
-      // System.out.println("Final estimated pose empty Y/N: " + visionEst.isEmpty());
       estimatedRobotPose = visionEst;
     }
 
