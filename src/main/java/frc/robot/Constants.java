@@ -89,7 +89,7 @@ public final class Constants {
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
      */
-    public static final double maximumAmbiguity = 0.25;
+    public static final double maximumAmbiguity = 1;
 
   }
 

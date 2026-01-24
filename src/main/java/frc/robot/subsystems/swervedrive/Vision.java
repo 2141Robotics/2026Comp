@@ -54,7 +54,7 @@ public class Vision {
    * April Tag Field Layout of the year.
    */
   public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2024Crescendo);
+      AprilTagFields.k2025ReefscapeWelded);
   /**
    * Photon Vision Simulation
    */
@@ -305,31 +305,31 @@ public class Vision {
    */
   enum Cameras {
     // /**
-    //  * Left Camera
-    //  */
+    // * Left Camera
+    // */
     // LEFT_CAM("left",
-    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
-    //     new Translation3d(Units.inchesToMeters(12.056),
-    //         Units.inchesToMeters(10.981),
-    //         Units.inchesToMeters(8.44)),
-    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    // new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
+    // new Translation3d(Units.inchesToMeters(12.056),
+    // Units.inchesToMeters(10.981),
+    // Units.inchesToMeters(8.44)),
+    // VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     // /**
-    //  * Right Camera
-    //  */
+    // * Right Camera
+    // */
     // RIGHT_CAM("right",
-    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-    //     new Translation3d(Units.inchesToMeters(12.056),
-    //         Units.inchesToMeters(-10.981),
-    //         Units.inchesToMeters(8.44)),
-    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    // new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
+    // new Translation3d(Units.inchesToMeters(12.056),
+    // Units.inchesToMeters(-10.981),
+    // Units.inchesToMeters(8.44)),
+    // VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera
      */
     CENTER_CAM("Limelight 2",
-        new Rotation3d(0, Units.degreesToRadians(18), 0),
-        new Translation3d(Units.inchesToMeters(-4.628),
-            Units.inchesToMeters(-10.687),
-            Units.inchesToMeters(16.129)),
+        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(180), 0),
+        new Translation3d(Units.inchesToMeters(0),
+            Units.inchesToMeters(13.5),
+            Units.inchesToMeters(8)),
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
     /**
@@ -501,7 +501,6 @@ public class Vision {
       for (PhotonPipelineResult result : resultsList) {
         mostRecentTimestamp = Math.max(mostRecentTimestamp, result.getTimestampSeconds());
       }
-
       resultsList = Robot.isReal() ? camera.getAllUnreadResults() : cameraSim.getCamera().getAllUnreadResults();
       lastReadTimestamp = currentTimestamp;
       resultsList.sort((PhotonPipelineResult a, PhotonPipelineResult b) -> {
@@ -526,12 +525,22 @@ public class Vision {
      *         timestamp, and targets used for
      *         estimation.
      */
+
+    private double t = 0;
     private void updateEstimatedGlobalPose() {
       Optional<EstimatedRobotPose> visionEst = Optional.empty();
       for (var change : resultsList) {
+        System.out.println("Processing a target Y/N: " + change.hasTargets());
         visionEst = poseEstimator.update(change);
+        if(visionEst.isEmpty()){
+          System.out.println("Estimated Pose is empty");
+        }if(change.getTimestampSeconds() == t){
+          System.out.println("empty cuz timestamp");
+        }
+        t = change.getTimestampSeconds();
         updateEstimationStdDevs(visionEst, change.getTargets());
       }
+      System.out.println("Final estimated pose empty Y/N " + visionEst.isEmpty());
       estimatedRobotPose = visionEst;
     }
 
@@ -544,14 +553,12 @@ public class Vision {
      * @param targets       All targets in this camera frame
      */
     private void updateEstimationStdDevs(
-      Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+        Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
       if (estimatedPose.isEmpty()) {
         // No pose input. Default to single-tag std devs
         curStdDevs = singleTagStdDevs;
 
       } else {
-        System.out.println("Estimated pose present");
-        //TODO Fixme plz
         // Pose present. Start running Heuristic
         var estStdDevs = singleTagStdDevs;
         int numTags = 0;
@@ -564,6 +571,8 @@ public class Vision {
           if (tagPose.isEmpty()) {
             System.out.println("Tag pose empty for tag ID " + tgt.getFiducialId());
             continue;
+          }else{
+            System.out.println("Tag has a pose for tag ID " +tgt.getFiducialId());
           }
           numTags++;
           avgDist += tagPose
@@ -595,3 +604,31 @@ public class Vision {
     }
   }
 }
+
+// lines 407-410 and ~531 are important for the camera pose estimation debugging
+// for (var result : camera.getAllUnreadResults()) {
+// visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
+// if (visionEst.isEmpty()) {
+// visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
+// }
+// updateEstimationStdDevs(visionEst, result.getTargets());
+
+// if (Robot.isSimulation()) {
+// visionEst.ifPresentOrElse(
+// est ->
+// getSimDebugField()
+// .getObject("VisionEstimation")
+// .setPose(est.estimatedPose.toPose2d()),
+// () -> {
+// getSimDebugField().getObject("VisionEstimation").setPoses();
+// });
+// }
+
+// visionEst.ifPresent(
+// est -> {
+// // Change our trust in the measurement based on the tags we can see
+// var estStdDevs = getEstimationStdDevs();
+
+// estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds,
+// estStdDevs);
+// });
