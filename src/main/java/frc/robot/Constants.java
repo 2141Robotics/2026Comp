@@ -102,4 +102,9 @@ public final class Constants {
     public static final double CLIMBER_HEIGHT_MAX = 12.0; // max height of climber
     public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
   }
+
+  public static class IntakeConstants {
+    public static final int intakeMotorPort = 32;
+    public static final double INTAKE_SPEED = 5.0; // Adjust as necessary
+  }
 }

@@ -31,6 +31,7 @@ import java.util.function.DoubleSupplier;
 
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,6 +50,7 @@ public class RobotContainer {
       "swerve/falcon"));
 
   // private final Climber climber = new Climber();
+  private final Intake intake = new Intake();
   
   private final SendableChooser<Command> autoChooser;
 
@@ -219,7 +221,7 @@ SwerveInputStream driveDirectAngle =
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::intake, intake).repeatedly());
       // driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
       // driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
 
