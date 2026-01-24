@@ -48,7 +48,7 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
 
-  private final Climber climber = new Climber();
+  // private final Climber climber = new Climber();
   
   private final SendableChooser<Command> autoChooser;
 
@@ -220,8 +220,8 @@ SwerveInputStream driveDirectAngle =
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-      driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
 
 
       driverXbox.b().whileTrue(

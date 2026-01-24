@@ -326,9 +326,9 @@ public class Vision {
      * Center Camera
      */
     CENTER_CAM("Limelight 2",
-        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(180), 0),
-        new Translation3d(Units.inchesToMeters(0),
-            Units.inchesToMeters(13.5),
+        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(0), 0),
+        new Translation3d(Units.inchesToMeters(13.5),
+            Units.inchesToMeters(0),
             Units.inchesToMeters(8)),
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
@@ -530,17 +530,19 @@ public class Vision {
     private void updateEstimatedGlobalPose() {
       Optional<EstimatedRobotPose> visionEst = Optional.empty();
       for (var change : resultsList) {
-        System.out.println("Processing a target Y/N: " + change.hasTargets());
+        // System.out.println("Processing a target Y/N: " + change.hasTargets());
         visionEst = poseEstimator.update(change);
         if(visionEst.isEmpty()){
           System.out.println("Estimated Pose is empty");
         }if(change.getTimestampSeconds() == t){
-          System.out.println("empty cuz timestamp");
+          System.out.println("Empty Pose b/c same timestamp as before");
+        }if(!change.hasTargets()){
+          System.out.println("Empty Pose b/c no targets");
         }
         t = change.getTimestampSeconds();
         updateEstimationStdDevs(visionEst, change.getTargets());
       }
-      System.out.println("Final estimated pose empty Y/N " + visionEst.isEmpty());
+      // System.out.println("Final estimated pose empty Y/N: " + visionEst.isEmpty());
       estimatedRobotPose = visionEst;
     }
 
