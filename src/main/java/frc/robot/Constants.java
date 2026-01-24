@@ -36,8 +36,7 @@ public final class Constants {
 
   public static final class AutonConstants {
 
-    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1, 0,
-        0);
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1, 0,0);
     public static final PIDConstants ROTATION_PID = new PIDConstants(1, 0, 0);
 
     public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(1),
@@ -54,6 +53,9 @@ public final class Constants {
 
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds
+
+    public static final double MAX_TRANSLATION_ACCELERATION = 3.0; // m/s^2
+    public static final double MAX_ANGULAR_ACCELERATION = 360.0; // degrees/s^2
   }
 
   public static class OperatorConstants {

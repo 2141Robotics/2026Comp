@@ -225,8 +225,8 @@ SwerveInputStream driveDirectAngle =
 
 
       driverXbox.b().whileTrue(
-      drivebase.driveToPose(
-      new Pose2d(new Translation2d(1, 0), Rotation2d.fromDegrees(0)))
+        drivebase.driveToPose(
+        new Pose2d(new Translation2d(1, 4), Rotation2d.fromDegrees(90)))
       );
     }
 

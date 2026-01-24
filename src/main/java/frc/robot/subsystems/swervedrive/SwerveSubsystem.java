@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
-
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
@@ -77,9 +77,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory) {
-    boolean blueAlliance = false;
-    Pose2d startingPose = blueAlliance ? AutonConstants.BLUE_STARTING_POSE
-        : AutonConstants.RED_STARTING_POSE;
+    Pose2d startingPose = isRedAlliance() ? AutonConstants.RED_STARTING_POSE
+        : AutonConstants.BLUE_STARTING_POSE;
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
     // objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -259,10 +258,11 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return PathFinding command
    */
   public Command driveToPose(Pose2d pose) {
+    System.out.println("Driving to Pose: " + pose);
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 4.0,
-        swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
+        swerveDrive.getMaximumChassisVelocity(), DrivebaseConstants.MAX_TRANSLATION_ACCELERATION,
+        swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(DrivebaseConstants.MAX_ANGULAR_ACCELERATION));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
     return AutoBuilder.pathfindToPose(
