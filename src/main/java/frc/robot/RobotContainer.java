@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -50,7 +49,9 @@ public class RobotContainer {
       "swerve/falcon"));
 
   // private final Climber climber = new Climber();
-  private final Intake intake = new Intake();
+  // private final Intake intake = new Intake();
+  // private final Turret turret = new Turret();
+  // private final Shooter shooter = new Shooter(); 
   
   private final SendableChooser<Command> autoChooser;
 
@@ -221,9 +222,13 @@ SwerveInputStream driveDirectAngle =
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::intake, intake).repeatedly());
+      // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::intake, intake).repeatedly());
       // driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      //driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.povUp().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      // driverXbox.povDown().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      // driverXbox.set button later().whileTrue(Commands.runOnce(shooter::shoot, shooter).repeatedly());
+
 
 
       driverXbox.b().whileTrue(

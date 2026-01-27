@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
     }
 
     private void init() {
-        intakeMotor.setNeutralMode(NeutralModeValue.Brake);
+        intakeMotor.setNeutralMode(NeutralModeValue.Coast);
         intakeMotor.setVoltage(0.0);
     }
 

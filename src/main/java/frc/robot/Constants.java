@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.swervedrive.Vision;
+
 import static edu.wpi.first.units.Units.Meter;
 // import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.math.Matter;
@@ -98,13 +100,25 @@ public final class Constants {
   public static class ClimberConstants {
     public static final double CLIMBER_SPEED = 2; // Adjust as necessary
     public static final int climberMotorPort = 31;
-    public static final double CLIMBER_CURRENT_HEIGHT = 12.0; // height of starting pos.
-    public static final double CLIMBER_HEIGHT_MAX = 12.0; // max height of climber
+    public static final double CLIMBER_HEIGHT_MAX = 3.0; // max height of climber
     public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
+    public static final double CLIMBER_kP = 0.1;
+    public static final double CLIMBER_kI = 0.0;
+    public static final double CLIMBER_kD = 0.0;
   }
 
   public static class IntakeConstants {
     public static final int intakeMotorPort = 32;
     public static final double INTAKE_SPEED = 5.0; // Adjust as necessary
+  }
+
+  public static class TurretConstants {
+    public static final int turretMotorPort = 33;
+    public static final double TURRET_SPEED = 5.0; // Adjust as necessary
+  }
+
+  public static class ShooterConstants {
+    public static final int SHOOTER_MOTOR_PORT = 30;
+    public static final double SHOOTER_SPEED = 10.0; // Adjust as necessary
   }
 }
