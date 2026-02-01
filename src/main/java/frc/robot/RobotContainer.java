@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -25,12 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import java.io.File;
-import java.util.function.DoubleSupplier;
-
 import swervelib.SwerveInputStream;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -51,7 +49,7 @@ public class RobotContainer {
   // private final Climber climber = new Climber();
   // private final Intake intake = new Intake();
   // private final Turret turret = new Turret();
-  // private final Shooter shooter = new Shooter(); 
+  // private final Shooter shooter = new Shooter(drivebase); 
   
   private final SendableChooser<Command> autoChooser;
 
@@ -222,12 +220,15 @@ SwerveInputStream driveDirectAngle =
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::intake, intake).repeatedly());
+      // driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
+      // driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      // driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
       // driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      //driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
-      // driverXbox.povUp().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      // driverXbox.povDown().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
-      // driverXbox.set button later().whileTrue(Commands.runOnce(shooter::shoot, shooter).repeatedly());
+      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
 
 
 

@@ -1,35 +1,78 @@
 package frc.robot.subsystems;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.util.Math;
 
 public class Shooter extends SubsystemBase {
-    private final TalonFX ShooterMotor;
 
-    public Shooter() {
-        ShooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_PORT);
+    private final TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_PORT); // CAN ID
+
+    private final VelocityVoltage velocityControl = new VelocityVoltage(0);
+
+    private boolean isShooting = false;
+
+    private boolean adaptiveMode = false;
+
+    private final SwerveSubsystem drivebase;
+
+    public Shooter(SwerveSubsystem d) {
+        this.drivebase = d;
         init();
     }
 
     private void init() {
-        ShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        ShooterMotor.setVoltage(0.0);
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        // PID gains (start small!)
+        config.Slot0.kP = 0.1;
+        config.Slot0.kI = 0.0;
+        config.Slot0.kD = 0.0;
+        config.Slot0.kV = 0.12; // Feedforward (VERY important for shooters)
+
+        shooterMotor.getConfigurator().apply(config);
     }
 
-    public void shoot() {
-        ShooterMotor.setVoltage(ShooterConstants.SHOOTER_SPEED);
-        
-        
+    public void setShooterRPM(double rpm) {
+        double rps = rpm / 60.0; // rotations per second
+        shooterMotor.setControl(velocityControl.withVelocity(rps));
     }
 
-    
+    public void stop() {
+        shooterMotor.stopMotor();
+    }
+
+    public double getRPM() {
+        return shooterMotor.getVelocity().getValue().baseUnitMagnitude() * 60.0;
+    }
+
+    public void toggleShooting() {
+        isShooting = !isShooting;
+        adaptiveMode = false;
+    }
+
+    public void toggleAdaptiveShooting() {
+        isShooting = !isShooting;
+        adaptiveMode = true;
+    }
 
     @Override
     public void periodic() {
         super.periodic();
-        
-        ShooterMotor.setVoltage(0.0);
+        if (isShooting) {
+            if (adaptiveMode) {
+                double adaptiveRPM = Math.calculateAdaptiveShooterRPM(drivebase.getPose());
+                setShooterRPM(adaptiveRPM);
+            }else {
+                setShooterRPM(ShooterConstants.SHOOTER_DEFAULT_RPM);
+            }
+        } else {
+            stop();
+        }
     }
 }

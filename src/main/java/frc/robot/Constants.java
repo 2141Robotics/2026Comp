@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,10 +13,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.swervedrive.Vision;
-
 import static edu.wpi.first.units.Units.Meter;
-// import frc.robot.subsystems.swervedrive.Vision;
+import frc.robot.subsystems.swervedrive.Vision;
+import frc.robot.util.InterpPoint;
+import frc.robot.util.InterpolationTable;
 import swervelib.math.Matter;
 
 /**
@@ -38,7 +40,7 @@ public final class Constants {
 
   public static final class AutonConstants {
 
-    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1, 0,0);
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1, 0, 0);
     public static final PIDConstants ROTATION_PID = new PIDConstants(1, 0, 0);
 
     public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(1),
@@ -93,32 +95,47 @@ public final class Constants {
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
      */
-    public static final double maximumAmbiguity = 1;
+    public static final double MAX_AMBIGUITY = 0.2;
 
   }
 
   public static class ClimberConstants {
     public static final double CLIMBER_SPEED = 2; // Adjust as necessary
-    public static final int climberMotorPort = 31;
+    public static final int CLIMBER_MOTOR_PORT = 31;
     public static final double CLIMBER_HEIGHT_MAX = 3.0; // max height of climber
     public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
-    public static final double CLIMBER_kP = 0.1;
-    public static final double CLIMBER_kI = 0.0;
-    public static final double CLIMBER_kD = 0.0;
+    public static final double CLIMBER_KP = 0.1;
+    public static final double CLIMBER_KI = 0.0;
+    public static final double CLIMBER_KD = 0.0;
   }
 
   public static class IntakeConstants {
-    public static final int intakeMotorPort = 32;
-    public static final double INTAKE_SPEED = 5.0; // Adjust as necessary
+    public static final int INTAKE_MOTOR_PORT = 41;
+    public static final int INTAKE_ARM_MOTOR_PORT = 42;
+    public static final double INTAKE_SPEED = 1.0; // Adjust as necessary
+    public static final double INTAKE_ARM_KP = 0.1;
+    public static final double INTAKE_ARM_KI = 0;
+    public static final double INTAKE_ARM_KD = 0;
+    public static final double INTAKE_ARM_MAX_POSITION = 10.0;
+    public static final double INTAKE_ARM_MIN_POSITION = 0;
   }
 
   public static class TurretConstants {
-    public static final int turretMotorPort = 33;
+    public static final int TURRET_MOTOR_PORT = 61;
     public static final double TURRET_SPEED = 5.0; // Adjust as necessary
+    public static final double TURRET_KP = 0;
+    public static final double TURRET_KI = 0;
+    public static final double TURRET_KD = 0;
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTER_MOTOR_PORT = 30;
-    public static final double SHOOTER_SPEED = 10.0; // Adjust as necessary
+    public static final int SHOOTER_MOTOR_PORT = 51;
+    public static final double SHOOTER_DEFAULT_RPM = 3000.0;
+    //TODO populate with real values
+    public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
+        new InterpPoint(1.5, 3200),
+        new InterpPoint(2.0, 3600),
+        new InterpPoint(2.5, 4100),
+        new InterpPoint(3.0, 4700)));
   }
 }

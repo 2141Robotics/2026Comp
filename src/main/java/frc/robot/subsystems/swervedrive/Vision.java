@@ -193,7 +193,7 @@ public class Vision {
         }
       }
       // ambiguity to high dont use estimate
-      if (bestTargetAmbiguity > VisionConstants.maximumAmbiguity) {
+      if (bestTargetAmbiguity > VisionConstants.MAX_AMBIGUITY) {
         return Optional.empty();
       }
 
