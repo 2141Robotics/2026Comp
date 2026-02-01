@@ -14,7 +14,7 @@
 //   public static void runAurora(AddressableLEDBufferView buffer) {
 
 //     cycles++;
-
+ 
 //     for (int i = 0;
 //         i < buffer.getLength();
 //         i++) { // Use buffer.getLength() instead of Constants.LED_COUNT
