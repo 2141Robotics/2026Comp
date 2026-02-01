@@ -15,8 +15,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Meter;
 import frc.robot.subsystems.swervedrive.Vision;
-import frc.robot.util.InterpPoint;
-import frc.robot.util.InterpolationTable;
+import frc.robot.util.Interpolation.InterpPoint;
+import frc.robot.util.Interpolation.InterpolationTable;
 import swervelib.math.Matter;
 
 /**
@@ -37,6 +37,10 @@ public final class Constants {
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED = Units.feetToMeters(14.5);
+
+  public static final class MathConstants{
+    public static final double DEGREES_TO_ROTATIONS = 1.0 / 360.0;
+  }
 
   public static final class AutonConstants {
 
@@ -126,6 +130,9 @@ public final class Constants {
     public static final double TURRET_KP = 0;
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
+    public static final double TURRET_GEAR_RATIO = 1;
+    public static final double TURRET_MAX_ANGLE = 90;
+    public static final double TURRET_MIN_ANGLE = -90;
   }
 
   public static class ShooterConstants {

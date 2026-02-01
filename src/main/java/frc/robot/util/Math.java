@@ -29,4 +29,21 @@ public class Math {
         }
         return robotPose.getTranslation().getDistance(allianceHubPosition);
     }
+
+    /**
+     * 
+     * @param robotPose
+     * @return angle in degrees from the robot's current position to the alliance hub
+     */
+    public static double calculateAngleToHub(Pose2d robotPose) {
+        //TODO add velocity compensation
+        Translation2d allianceHubPosition;
+        if (isRedAlliance()) {
+            allianceHubPosition = redHubPosition;
+        } else {
+            allianceHubPosition = blueHubPosition;
+        }
+        Translation2d toHub = allianceHubPosition.minus(robotPose.getTranslation());
+        return toHub.getAngle().getDegrees() - robotPose.getRotation().getDegrees();
+    }
 }

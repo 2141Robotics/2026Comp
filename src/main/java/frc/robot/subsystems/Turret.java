@@ -6,7 +6,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.TurretConstants;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.util.Math;
 
 public class Turret extends SubsystemBase {
     private final TalonFX turretMotor;
@@ -15,7 +18,10 @@ public class Turret extends SubsystemBase {
 
     private double turretDesiredAngle = 0.0;
 
-    public Turret() {
+    private final SwerveSubsystem drivebase;
+
+    public Turret(SwerveSubsystem d) {
+        this.drivebase = d;
         turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_PORT);
         init();
     }
@@ -25,6 +31,7 @@ public class Turret extends SubsystemBase {
         config.Slot0.kP = TurretConstants.TURRET_KP;
         config.Slot0.kI = TurretConstants.TURRET_KI;
         config.Slot0.kD = TurretConstants.TURRET_KD;
+        config.Feedback.SensorToMechanismRatio = TurretConstants.TURRET_GEAR_RATIO;
         turretMotor.getConfigurator().apply(config);
         turretMotor.setNeutralMode(NeutralModeValue.Brake);
         turretMotor.setPosition(0.0);
@@ -48,8 +55,14 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         super.periodic();
         if(adaptiveMode){
-            //TODO calculate turretDesiredAngle based on target tracking
+            turretDesiredAngle = Math.calculateAngleToHub(drivebase.getPose());
         }
-        turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle));
+        if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
+            turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
+        } else if(turretDesiredAngle < TurretConstants.TURRET_MIN_ANGLE){
+            turretDesiredAngle = TurretConstants.TURRET_MIN_ANGLE;
+        }
+        //CONVERTS DEGREES TO ROTATIONS
+        turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS));
     }
 }
