@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.TurretConstants;
@@ -56,6 +57,7 @@ public class Turret extends SubsystemBase {
         super.periodic();
         if(adaptiveMode){
             turretDesiredAngle = Math.calculateAngleToHub(drivebase.getPose());
+            SmartDashboard.putNumber("Angle To Hub", Math.calculateAngleToHub(drivebase.getPose()));
         }
         if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
             turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
@@ -64,5 +66,7 @@ public class Turret extends SubsystemBase {
         }
         //CONVERTS DEGREES TO ROTATIONS
         turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS));
+        
+        SmartDashboard.putNumber("Turret Angle", turretDesiredAngle);
     }
 }

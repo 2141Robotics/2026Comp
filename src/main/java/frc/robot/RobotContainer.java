@@ -27,6 +27,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -46,7 +50,7 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
 
-  // private final Climber climber = new Climber();
+  private final Climber climber = new Climber();
   // private final Intake intake = new Intake();
   // private final Turret turret = new Turret(drivebase);
   // private final Shooter shooter = new Shooter(drivebase); 
@@ -196,7 +200,7 @@ SwerveInputStream driveDirectAngle =
               0,
               new Constraints(Units.degreesToRadians(360),
                   Units.degreesToRadians(180))));
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      // driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
           () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
@@ -215,18 +219,18 @@ SwerveInputStream driveDirectAngle =
     } else {
       // Teleop Controls
 
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyroWithAlliance)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      // driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       // driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
       // driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
       // driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
       // driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
-      // driverXbox.leftBumper().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
-      // driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
       // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
       // driverXbox.leftBumper().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
 

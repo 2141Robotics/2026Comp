@@ -562,8 +562,6 @@ public class Vision {
           if (tagPose.isEmpty()) {
             System.out.println("Tag pose empty for tag ID " + tgt.getFiducialId());
             continue;
-          }else{
-            System.out.println("Tag has a pose for tag ID " +tgt.getFiducialId());
           }
           numTags++;
           avgDist += tagPose

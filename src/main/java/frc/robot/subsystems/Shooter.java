@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -63,16 +64,21 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double desiredSpeed = 0.0;
         super.periodic();
         if (isShooting) {
             if (adaptiveMode) {
                 double adaptiveRPM = Math.calculateAdaptiveShooterRPM(drivebase.getPose());
                 setShooterRPM(adaptiveRPM);
+                desiredSpeed = adaptiveRPM;
             }else {
                 setShooterRPM(ShooterConstants.SHOOTER_DEFAULT_RPM);
+                desiredSpeed = ShooterConstants.SHOOTER_DEFAULT_RPM;
             }
         } else {
             stop();
         }
+        
+        SmartDashboard.putNumber("Shooter Commanded RPM", desiredSpeed);
     }
 }

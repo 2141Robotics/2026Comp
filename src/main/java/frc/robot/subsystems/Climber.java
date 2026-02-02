@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
@@ -27,7 +28,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void moveUp() {
-        climberCurrentHeight -= ClimberConstants.CLIMBER_SPEED;
+        climberCurrentHeight += ClimberConstants.CLIMBER_SPEED;
         if (climberCurrentHeight > ClimberConstants.CLIMBER_HEIGHT_MAX) {
             climberCurrentHeight = ClimberConstants.CLIMBER_HEIGHT_MAX;
         }
@@ -44,5 +45,6 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         super.periodic();
         climberMotor.setControl(new PositionDutyCycle(climberCurrentHeight));
+        SmartDashboard.putNumber("ClimberHeight", climberCurrentHeight);
     }
 }

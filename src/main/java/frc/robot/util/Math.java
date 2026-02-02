@@ -1,14 +1,19 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Meter;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Math {
     //Field measurements in inches, converted to meters
-    private static final Translation2d blueHubPosition = new Translation2d(158.6 + (47 / 2.0) * 0.0254, 317.7 * 0.0254);
-    private static final Translation2d redHubPosition = new Translation2d(651.2 - (158.6 + (47 / 2.0)) * 0.0254, 317.7 * 0.0254);
+    private static final Translation2d blueHubPosition = new Translation2d((158.6 + (47.0 / 2.0)) * 0.0254, (317.7/2.0) * 0.0254);
+    private static final Translation2d redHubPosition = new Translation2d((651.2 - (158.6 + (47 / 2.0))) * 0.0254, (317.7/2.0) * 0.0254);
 
     private static boolean isRedAlliance() {
         var alliance = DriverStation.getAlliance();
@@ -17,7 +22,10 @@ public class Math {
 
     public static double calculateAdaptiveShooterRPM(Pose2d robotPose) {
         //TODO add velocity compensation
-        return Constants.ShooterConstants.shooterTable.get(calculateDistanceToHub(robotPose));
+        double distance = calculateDistanceToHub(robotPose);
+        SmartDashboard.putNumber("Blue Hub X", blueHubPosition.getMeasureX().in(Meter));
+        SmartDashboard.putNumber("Distance to Alliance Hub", distance);
+        return Constants.ShooterConstants.shooterTable.get(distance);
     }
 
     private static double calculateDistanceToHub(Pose2d robotPose) {
@@ -44,6 +52,7 @@ public class Math {
             allianceHubPosition = blueHubPosition;
         }
         Translation2d toHub = allianceHubPosition.minus(robotPose.getTranslation());
-        return toHub.getAngle().getDegrees() - robotPose.getRotation().getDegrees();
+        double angleToHub = toHub.getAngle().getDegrees() - robotPose.getRotation().getDegrees();
+        return angleToHub;
     }
 }
