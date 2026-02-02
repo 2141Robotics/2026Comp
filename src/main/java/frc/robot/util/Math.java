@@ -20,7 +20,7 @@ public class Math {
         //TODO add velocity compensation
         double distance = calculateDistanceToHub(calculateShooterCenter(robotPose));
         SmartDashboard.putNumber("Distance to Alliance Hub", distance);
-        return Constants.ShooterConstants.shooterTable.get(distance);
+        return Constants.ShooterConstants.shooterDistanceTable.get(distance);
     }
 
     private static double calculateDistanceToHub(Pose2d robotPose) {

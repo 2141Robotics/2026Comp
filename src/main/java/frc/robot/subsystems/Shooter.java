@@ -22,6 +22,8 @@ public class Shooter extends SubsystemBase {
 
     private final SwerveSubsystem drivebase;
 
+    private final Kicker kicker = new Kicker(this::getRPM);
+
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
         init();
@@ -42,10 +44,12 @@ public class Shooter extends SubsystemBase {
     public void setShooterRPM(double rpm) {
         double rps = rpm / 60.0; // rotations per second
         shooterMotor.setControl(velocityControl.withVelocity(rps));
+        kicker.setRPM(rpm);
     }
 
     public void stop() {
         shooterMotor.stopMotor();
+        kicker.stop();
     }
 
     public double getRPM() {
@@ -78,7 +82,6 @@ public class Shooter extends SubsystemBase {
         } else {
             stop();
         }
-        
         SmartDashboard.putNumber("Shooter Commanded RPM", desiredSpeed);
     }
 }

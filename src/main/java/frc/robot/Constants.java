@@ -139,7 +139,7 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_PORT = 51;
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
     // TODO populate with real values
-    public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
+    public static final InterpolationTable shooterDistanceTable = new InterpolationTable(List.of(
         new InterpPoint(1.5, 3200),
         new InterpPoint(2.0, 3600),
         new InterpPoint(2.5, 4100),
@@ -151,5 +151,10 @@ public final class Constants {
   public static class IndexerConstants {
     public static final int INDEXER_MOTOR_PORT = 61;
     public static final double INDEXER_SPEED = 1;
+  }
+  
+  public static class KickerConstants {
+    public static final int KICKER_MOTOR_PORT = 71;
+    public static final double KICKER_SPEED = 1;
   }
 }
