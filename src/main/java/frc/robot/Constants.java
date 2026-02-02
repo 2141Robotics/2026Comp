@@ -38,7 +38,7 @@ public final class Constants {
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED = Units.feetToMeters(14.5);
 
-  public static final class MathConstants{
+  public static final class MathConstants {
     public static final double DEGREES_TO_ROTATIONS = 1.0 / 360.0;
   }
 
@@ -138,11 +138,18 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_PORT = 51;
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
-    //TODO populate with real values
+    // TODO populate with real values
     public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
         new InterpPoint(1.5, 3200),
         new InterpPoint(2.0, 3600),
         new InterpPoint(2.5, 4100),
         new InterpPoint(3.0, 4700)));
+    // How far the shooter is offset from the robot center, in meters
+    public static final double SHOOTER_OFFSET = 10 * 0.0254;
+  }
+
+  public static class IndexerConstants {
+    public static final int INDEXER_MOTOR_PORT = 61;
+    public static final double INDEXER_SPEED = 1;
   }
 }

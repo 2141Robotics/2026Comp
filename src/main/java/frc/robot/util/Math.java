@@ -1,12 +1,8 @@
 package frc.robot.util;
 
-import static edu.wpi.first.units.Units.Meter;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
@@ -22,8 +18,7 @@ public class Math {
 
     public static double calculateAdaptiveShooterRPM(Pose2d robotPose) {
         //TODO add velocity compensation
-        double distance = calculateDistanceToHub(robotPose);
-        SmartDashboard.putNumber("Blue Hub X", blueHubPosition.getMeasureX().in(Meter));
+        double distance = calculateDistanceToHub(calculateShooterCenter(robotPose));
         SmartDashboard.putNumber("Distance to Alliance Hub", distance);
         return Constants.ShooterConstants.shooterTable.get(distance);
     }
@@ -51,8 +46,14 @@ public class Math {
         } else {
             allianceHubPosition = blueHubPosition;
         }
-        Translation2d toHub = allianceHubPosition.minus(robotPose.getTranslation());
-        double angleToHub = toHub.getAngle().getDegrees() - robotPose.getRotation().getDegrees();
+        Pose2d shooterCenter = calculateShooterCenter(robotPose);
+        Translation2d toHub = allianceHubPosition.minus(shooterCenter.getTranslation());
+        double angleToHub = toHub.getAngle().getDegrees() - shooterCenter.getRotation().getDegrees();
         return angleToHub;
+    }
+
+    private static Pose2d calculateShooterCenter(Pose2d robotPose) {
+        Translation2d shooterOffset = new Translation2d(Constants.ShooterConstants.SHOOTER_OFFSET, 0).rotateBy(robotPose.getRotation());
+        return new Pose2d(robotPose.getTranslation().plus(shooterOffset), robotPose.getRotation());
     }
 }

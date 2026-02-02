@@ -31,6 +31,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -53,7 +54,8 @@ public class RobotContainer {
   private final Climber climber = new Climber();
   // private final Intake intake = new Intake();
   // private final Turret turret = new Turret(drivebase);
-  // private final Shooter shooter = new Shooter(drivebase); 
+  // private final Shooter shooter = new Shooter(drivebase);
+  // private final Indexer indexer = new Indexer(); 
   
   private final SendableChooser<Command> autoChooser;
 
@@ -233,6 +235,7 @@ SwerveInputStream driveDirectAngle =
       driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
       // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
       // driverXbox.leftBumper().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
+      // driverXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
 
 
 
