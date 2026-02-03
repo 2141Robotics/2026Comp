@@ -53,8 +53,8 @@ public class RobotContainer {
 
   private final Climber climber = new Climber();
   // private final Intake intake = new Intake();
-  // private final Turret turret = new Turret(drivebase);
-  // private final Shooter shooter = new Shooter(drivebase);
+  private final Turret turret = new Turret(drivebase);
+  private final Shooter shooter = new Shooter(drivebase);
   // private final Indexer indexer = new Indexer(); 
   
   private final SendableChooser<Command> autoChooser;
@@ -226,11 +226,11 @@ SwerveInputStream driveDirectAngle =
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      // driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
-      // driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
-      // driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      // driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
-      // driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
+      driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
+      driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
       driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
       driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
       // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());

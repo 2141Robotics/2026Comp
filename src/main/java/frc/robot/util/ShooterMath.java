@@ -29,7 +29,7 @@ public class ShooterMath {
         double RPM = ShooterConstants.shooterTable.get(distance);
         Translation2d initialVelocity = calculateInitialVelocity(RPM, robotPose);
         Translation2d robotVelocity = new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond).rotateBy(robotPose.getRotation());
-        return initialVelocity.minus(robotVelocity);
+        return initialVelocity.plus(robotVelocity);
     }
 
     private static double calculateDistanceToHub(Pose2d robotPose) {
