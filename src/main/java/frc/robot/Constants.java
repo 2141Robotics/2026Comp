@@ -148,7 +148,7 @@ public final class Constants {
     // How far the shooter is offset from the robot center, in meters
     public static final double SHOOTER_OFFSET = 10 * 0.0254;
     // Diameter of the shooter wheel in meters
-    public static final double SHOOTER_WHEEL_DIAMETER = 4 * 0.0254;
+    public static final double SHOOTER_WHEEL_CIRCUMFRENCE = 4 * 0.0254 * MathConstants.PI;
     // Efficiency factor to account for losses, assumed to be linear
     public static final double SHOOTER_EFFICIENCY = 0.8;
   }

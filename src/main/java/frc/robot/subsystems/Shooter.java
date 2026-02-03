@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.util.Math;
+import frc.robot.util.ShooterMath;
 
 public class Shooter extends SubsystemBase {
 
@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase {
         super.periodic();
         if (isShooting) {
             if (adaptiveMode) {
-                double adaptiveRPM = Math.calculateAdaptiveShooterRPM(drivebase.getPose());
+                double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity());
                 setShooterRPM(adaptiveRPM);
                 desiredSpeed = adaptiveRPM;
             }else {

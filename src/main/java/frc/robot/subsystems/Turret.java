@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.util.Math;
+import frc.robot.util.ShooterMath;
 
 public class Turret extends SubsystemBase {
     private final TalonFX turretMotor;
@@ -56,8 +56,8 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         super.periodic();
         if(adaptiveMode){
-            turretDesiredAngle = Math.calculateAngleToHub(drivebase.getPose());
-            SmartDashboard.putNumber("Angle To Hub", Math.calculateAngleToHub(drivebase.getPose()));
+            turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), drivebase.getRobotVelocity());
+            SmartDashboard.putNumber("Angle To Hub", turretDesiredAngle);
         }
         if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
             turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
