@@ -40,6 +40,7 @@ public final class Constants {
 
   public static final class MathConstants {
     public static final double DEGREES_TO_ROTATIONS = 1.0 / 360.0;
+    public static final double PI = Math.PI;
   }
 
   public static final class AutonConstants {
@@ -139,19 +140,24 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_PORT = 51;
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
     // TODO populate with real values
-    public static final InterpolationTable shooterDistanceTable = new InterpolationTable(List.of(
+    public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
         new InterpPoint(1.5, 3200),
         new InterpPoint(2.0, 3600),
         new InterpPoint(2.5, 4100),
         new InterpPoint(3.0, 4700)));
     // How far the shooter is offset from the robot center, in meters
     public static final double SHOOTER_OFFSET = 10 * 0.0254;
+    // Diameter of the shooter wheel in meters
+    public static final double SHOOTER_WHEEL_DIAMETER = 4 * 0.0254;
+    // Efficiency factor to account for losses, assumed to be linear
+    public static final double SHOOTER_EFFICIENCY = 0.8;
   }
 
   public static class IndexerConstants {
     public static final int INDEXER_MOTOR_PORT = 61;
     public static final double INDEXER_SPEED = 1;
   }
+
   
   public static class KickerConstants {
     public static final int KICKER_MOTOR_PORT = 71;

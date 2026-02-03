@@ -4,7 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
+import frc.robot.Constants.MathConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class Math {
     //Field measurements in inches, converted to meters
@@ -20,7 +21,8 @@ public class Math {
         //TODO add velocity compensation
         double distance = calculateDistanceToHub(calculateShooterCenter(robotPose));
         SmartDashboard.putNumber("Distance to Alliance Hub", distance);
-        return Constants.ShooterConstants.shooterDistanceTable.get(distance);
+        double RPM = ShooterConstants.shooterTable.get(distance);
+        calculateInitialVelocity(RPM);
     }
 
     private static double calculateDistanceToHub(Pose2d robotPose) {
@@ -53,7 +55,18 @@ public class Math {
     }
 
     private static Pose2d calculateShooterCenter(Pose2d robotPose) {
-        Translation2d shooterOffset = new Translation2d(Constants.ShooterConstants.SHOOTER_OFFSET, 0).rotateBy(robotPose.getRotation());
+        Translation2d shooterOffset = new Translation2d(ShooterConstants.SHOOTER_OFFSET, 0).rotateBy(robotPose.getRotation());
         return new Pose2d(robotPose.getTranslation().plus(shooterOffset), robotPose.getRotation());
+    }
+
+    /**
+     * 
+     * @param RPM The RPM the shooter would need to score at the given distance with no robot velocity
+     * @return The velocity of the ball in m/s
+     */
+    private static double calculateInitialVelocity(double RPM){
+        double wheelCircumference = ShooterConstants.SHOOTER_WHEEL_DIAMETER * MathConstants.PI;
+        double wheelRotationsPerSecond = RPM / 60.0;
+        return wheelCircumference * wheelRotationsPerSecond * ShooterConstants.SHOOTER_EFFICIENCY;
     }
 }
