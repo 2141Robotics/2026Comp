@@ -76,6 +76,7 @@ public class Shooter extends SubsystemBase {
                 setShooterRPM(adaptiveRPM);
                 desiredSpeed = adaptiveRPM;
             }else {
+                SubsystemStates.outsideShooterRange = false;
                 setShooterRPM(ShooterConstants.SHOOTER_DEFAULT_RPM);
                 desiredSpeed = ShooterConstants.SHOOTER_DEFAULT_RPM;
             }

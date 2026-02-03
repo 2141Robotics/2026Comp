@@ -21,7 +21,9 @@ public class Indexer extends SubsystemBase {
     }
 
     public void runIndexer() {
-        indexerMotor.setControl(new DutyCycleOut(IndexerConstants.INDEXER_SPEED));
+        if(!SubsystemStates.outsideShooterRange && !SubsystemStates.outsideTurretRange){
+            indexerMotor.setControl(new DutyCycleOut(IndexerConstants.INDEXER_SPEED));
+        }
     }
 
     @Override

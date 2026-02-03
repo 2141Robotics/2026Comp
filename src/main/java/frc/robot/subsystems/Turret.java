@@ -61,8 +61,16 @@ public class Turret extends SubsystemBase {
         }
         if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
             turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
+            if(adaptiveMode){
+                SubsystemStates.outsideTurretRange = true;
+            }
         } else if(turretDesiredAngle < TurretConstants.TURRET_MIN_ANGLE){
             turretDesiredAngle = TurretConstants.TURRET_MIN_ANGLE;
+            if(adaptiveMode){
+                SubsystemStates.outsideTurretRange = true;
+            }
+        } else{
+            SubsystemStates.outsideTurretRange = false;
         }
         //CONVERTS DEGREES TO ROTATIONS
         turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS));

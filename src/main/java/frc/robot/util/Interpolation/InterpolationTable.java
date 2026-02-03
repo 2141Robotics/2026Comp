@@ -1,6 +1,8 @@
 package frc.robot.util.Interpolation;
 import java.util.List;
 
+import frc.robot.subsystems.SubsystemStates;
+
 public class InterpolationTable {
 
     private final List<InterpPoint> points;
@@ -13,12 +15,18 @@ public class InterpolationTable {
 
         // Clamp low
         if (distance <= points.get(0).distance) {
+            SubsystemStates.outsideShooterRange = true;
             return points.get(0).value;
         }
 
         // Clamp high
-        if (distance >= points.get(points.size() - 1).distance) {
+        else if (distance >= points.get(points.size() - 1).distance) {
+            SubsystemStates.outsideShooterRange = true;
             return points.get(points.size() - 1).value;
+        }
+
+        else{
+            SubsystemStates.outsideShooterRange = false;
         }
 
         // Find surrounding points
