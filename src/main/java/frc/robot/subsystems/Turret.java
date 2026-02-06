@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -33,6 +34,8 @@ public class Turret extends SubsystemBase {
         config.Slot0.kI = TurretConstants.TURRET_KI;
         config.Slot0.kD = TurretConstants.TURRET_KD;
         config.Feedback.SensorToMechanismRatio = TurretConstants.TURRET_GEAR_RATIO;
+        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.TURRET_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
         turretMotor.getConfigurator().apply(config);
         turretMotor.setNeutralMode(NeutralModeValue.Brake);
         turretMotor.setPosition(0.0);

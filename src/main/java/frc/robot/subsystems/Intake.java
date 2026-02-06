@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
@@ -23,12 +24,19 @@ public class Intake extends SubsystemBase {
 
     private void init() {
         intakeMotor.setNeutralMode(NeutralModeValue.Coast);
-        intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.Slot0.kP = IntakeConstants.INTAKE_ARM_KP;
-        config.Slot0.kI = IntakeConstants.INTAKE_ARM_KI;
-        config.Slot0.kD = IntakeConstants.INTAKE_ARM_KD;
-        intakeArmMotor.getConfigurator().apply(config);
+        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.INTAKE_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        intakeMotor.getConfigurator().apply(config);
+
+        intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
+        TalonFXConfiguration armConfig = new TalonFXConfiguration();
+        armConfig.Slot0.kP = IntakeConstants.INTAKE_ARM_KP;
+        armConfig.Slot0.kI = IntakeConstants.INTAKE_ARM_KI;
+        armConfig.Slot0.kD = IntakeConstants.INTAKE_ARM_KD;
+        armConfig.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.INTAKE_ARM_CURRENT_LIMIT;
+        armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        intakeArmMotor.getConfigurator().apply(armConfig);
     }
 
     public void runIntake() {

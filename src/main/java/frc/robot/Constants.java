@@ -151,6 +151,10 @@ public final class Constants {
     public static final double SHOOTER_WHEEL_CIRCUMFRENCE = 4 * 0.0254 * MathConstants.PI;
     // Efficiency factor to account for losses, assumed to be linear
     public static final double SHOOTER_EFFICIENCY = 0.8;
+    public static final double SHOOTER_KP = 0.1;
+    public static final double SHOOTER_KI = 0;
+    public static final double SHOOTER_KD = 0;
+    public static final double SHOOTER_KV = 0.12;
   }
 
   public static class IndexerConstants {
@@ -162,5 +166,20 @@ public final class Constants {
   public static class KickerConstants {
     public static final int KICKER_MOTOR_PORT = 71;
     public static final double KICKER_SPEED = 1;
+    public static final double KICKER_KP = 0.1;
+    public static final double KICKER_KI = 0;
+    public static final double KICKER_KD = 0;
+    public static final double KICKER_KV = 0.12;
+  } 
+  
+  public static class ElectricalConstants {
+    //Note the drive and steering motor current limits can be found in the YAGSL .json files in deploy
+    public static final double CLIMBER_CURRENT_LIMIT = 40;
+    public static final double SHOOTER_CURRENT_LIMIT = 80;
+    public static final double TURRET_CURRENT_LIMIT = 20;
+    public static final double INTAKE_CURRENT_LIMIT = 40;
+    public static final double INTAKE_ARM_CURRENT_LIMIT = 40;
+    public static final double KICKER_CURRENT_LIMIT = 40;
+    public static final double INDEXER_CURRENT_LIMIT = 40;
   }
 }

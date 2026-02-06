@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ElectricalConstants;
 
 public class Climber extends SubsystemBase {
     private final TalonFX climberMotor;
@@ -26,6 +27,8 @@ public class Climber extends SubsystemBase {
         config.Slot0.kP = ClimberConstants.CLIMBER_KP;
         config.Slot0.kI = ClimberConstants.CLIMBER_KI;
         config.Slot0.kD = ClimberConstants.CLIMBER_KD;
+        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.CLIMBER_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
         climberMotor.getConfigurator().apply(config);
         climberMotor.setPosition(0);
     }

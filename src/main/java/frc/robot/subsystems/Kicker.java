@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.KickerConstants;
 
 public class Kicker extends SubsystemBase {
@@ -32,10 +33,12 @@ public class Kicker extends SubsystemBase {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         // PID gains (start small!)
-        config.Slot0.kP = 0.1;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
-        config.Slot0.kV = 0.12; // Feedforward (VERY important for shooters)
+        config.Slot0.kP = KickerConstants.KICKER_KP;
+        config.Slot0.kI = KickerConstants.KICKER_KI;
+        config.Slot0.kD = KickerConstants.KICKER_KD;
+        config.Slot0.kV = KickerConstants.KICKER_KV; // Feedforward (VERY important for shooters)
+        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.KICKER_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         kickerMotor.getConfigurator().apply(config);
     }

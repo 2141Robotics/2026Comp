@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.util.ShooterMath;
@@ -33,10 +34,12 @@ public class Shooter extends SubsystemBase {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         // PID gains (start small!)
-        config.Slot0.kP = 0.1;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
-        config.Slot0.kV = 0.12; // Feedforward (VERY important for shooters)
+        config.Slot0.kP = ShooterConstants.SHOOTER_KP;
+        config.Slot0.kI = ShooterConstants.SHOOTER_KI;
+        config.Slot0.kD = ShooterConstants.SHOOTER_KD;
+        config.Slot0.kV = ShooterConstants.SHOOTER_KV; // Feedforward (VERY important for shooters)
+        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.SHOOTER_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         shooterMotor.getConfigurator().apply(config);
     }
