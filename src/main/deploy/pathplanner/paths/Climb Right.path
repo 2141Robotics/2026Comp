@@ -3,57 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 4.0
+        "x": 0.9901315789473677,
+        "y": 2.3716694078947365
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.314725177300492,
-        "y": 4.9677304964531155
+        "x": 0.9901315789473677,
+        "y": 2.6216694078947365
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4725975177260233,
-        "y": 4.831037234041767
+        "x": 0.5948108552631572,
+        "y": 2.8610460992907805
       },
       "prevControl": {
-        "x": 1.5701757599891186,
-        "y": 4.869449243149569
+        "x": 0.3450000388357293,
+        "y": 2.851322108553351
       },
       "nextControl": {
-        "x": 3.2282127659485007,
-        "y": 4.7988741134743895
+        "x": 0.8611759868421038,
+        "y": 2.87141447368421
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.622429078009711,
-        "y": 3.7455319148928314
+        "x": 0.9901315789473677,
+        "y": 2.8610460992907805
       },
       "prevControl": {
-        "x": 3.645359688765313,
-        "y": 4.187765122322291
-      },
-      "nextControl": {
-        "x": 3.5661436170168033,
-        "y": 2.6600265957438953
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.0,
-        "y": 4.0
-      },
-      "prevControl": {
-        "x": 1.5822207446808512,
-        "y": 1.8249689716312059
+        "x": 0.7404395735335911,
+        "y": 2.8734518412051746
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,9 +47,22 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "climberUp",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "climberDown",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 0.3,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0,
@@ -82,5 +79,5 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterRPM(double rpm) {
         double rps = rpm / 60.0; // rotations per second
-        shooterMotor.setControl(velocityControl.withVelocity(rps));
+        shooterMotor.setControl(velocityControl.withVelocity(rps).withEnableFOC(true));
         kicker.setRPM(rpm);
     }
 

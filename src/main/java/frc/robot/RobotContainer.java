@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.auto.ClimberDown;
+import frc.robot.commands.auto.ClimberUp;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -34,7 +36,6 @@ import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -53,8 +54,8 @@ public class RobotContainer {
 
   private final Climber climber = new Climber();
   // private final Intake intake = new Intake();
-  private final Turret turret = new Turret(drivebase);
-  private final Shooter shooter = new Shooter(drivebase);
+  // private final Turret turret = new Turret(drivebase);
+  // private final Shooter shooter = new Shooter(drivebase);
   // private final Indexer indexer = new Indexer(); 
   
   private final SendableChooser<Command> autoChooser;
@@ -141,6 +142,8 @@ SwerveInputStream driveDirectAngle =
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    NamedCommands.registerCommand("ClimberUp", new ClimberUp(climber));
+    NamedCommands.registerCommand("ClimberDown", new ClimberDown(climber));
     // Configure the trigger bindings
     configureBindings();
     // Build an auto chooser. This will use Commands.none() as the default option.
@@ -226,13 +229,16 @@ SwerveInputStream driveDirectAngle =
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
-      driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
-      driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
-      driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
-      driverXbox.povUp().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      driverXbox.povDown().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
+      // driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      // driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      // driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp, climber).repeatedly());
+      driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown, climber).repeatedly());
+      driverXbox.b().onTrue(Commands.runOnce(climber::resetHeight, climber));
       // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
       // driverXbox.leftBumper().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
       // driverXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
@@ -259,5 +265,9 @@ SwerveInputStream driveDirectAngle =
 
   public void setMotorBrake(boolean brake) {
     drivebase.setMotorBrake(brake);
+  }
+
+  public void climberUp(){
+    climber.climberUp();
   }
 }

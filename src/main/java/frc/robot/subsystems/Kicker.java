@@ -42,12 +42,12 @@ public class Kicker extends SubsystemBase {
 
     
     public void setRPM(double rpm) {
-        kickerMotor.setControl(velocityControl.withVelocity(rpm/60.0));
+        kickerMotor.setControl(velocityControl.withVelocity(rpm/60.0).withEnableFOC(true));
         this.targetRPM = rpm;
     }
 
     public void waitForShooterSpinup() {
-        kickerMotor.setControl(velocityControl.withVelocity(0));
+        kickerMotor.setControl(velocityControl.withVelocity(0).withEnableFOC(true));
     }
 
     public void stop() {

@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,31 +22,46 @@ public class Climber extends SubsystemBase {
 
     private void init() {
         climberMotor.setNeutralMode(NeutralModeValue.Brake);
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration config = new TalonFXConfiguration().withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         config.Slot0.kP = ClimberConstants.CLIMBER_KP;
         config.Slot0.kI = ClimberConstants.CLIMBER_KI;
         config.Slot0.kD = ClimberConstants.CLIMBER_KD;
         climberMotor.getConfigurator().apply(config);
+        climberMotor.setPosition(0);
     }
 
     public void moveUp() {
         climberCurrentHeight += ClimberConstants.CLIMBER_SPEED;
-        if (climberCurrentHeight > ClimberConstants.CLIMBER_HEIGHT_MAX) {
-            climberCurrentHeight = ClimberConstants.CLIMBER_HEIGHT_MAX;
-        }
     }
 
     public void moveDown() {
         climberCurrentHeight -= ClimberConstants.CLIMBER_SPEED;
-        if (climberCurrentHeight < ClimberConstants.CLIMBER_HEIGHT_MIN) {
-            climberCurrentHeight = ClimberConstants.CLIMBER_HEIGHT_MIN;
-        }
+    }
+    
+    public boolean atHeight(){
+        SmartDashboard.putNumber("ClimberActualHeight", climberCurrentHeight);
+        return Math.abs(climberMotor.getPosition().getValueAsDouble() - climberCurrentHeight)/ climberCurrentHeight <= 0.05;
+    }
+
+    public void resetHeight(){
+        climberMotor.setPosition(0);
+        climberCurrentHeight = 0;
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        climberMotor.setControl(new PositionDutyCycle(climberCurrentHeight));
-        SmartDashboard.putNumber("ClimberHeight", climberCurrentHeight);
+        climberMotor.setControl(new PositionDutyCycle(climberCurrentHeight).withEnableFOC(true));
+        SmartDashboard.putNumber("ClimberDesiredHeight", climberCurrentHeight);
+        
+        SmartDashboard.putNumber("ClimberCurrent",climberMotor.getStatorCurrent().getValueAsDouble());
+    }
+
+    public void climberUp() {
+        climberCurrentHeight = ClimberConstants.CLIMBER_HEIGHT_MAX;
+    }
+
+    public void climberDown() {
+        climberCurrentHeight = ClimberConstants.CLIMBER_HEIGHT_MIN;
     }
 }

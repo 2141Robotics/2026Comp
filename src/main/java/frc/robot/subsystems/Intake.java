@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void runIntake() {
-        intakeMotor.setControl(new DutyCycleOut(IntakeConstants.INTAKE_SPEED));
+        intakeMotor.setControl(new DutyCycleOut(IntakeConstants.INTAKE_SPEED).withEnableFOC(true));
     }
 
     public void toggleDeployment() {
@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        intakeMotor.setControl(new DutyCycleOut(0.0));
-        intakeArmMotor.setControl(new PositionDutyCycle(armDesiredPosition));
+        intakeMotor.setControl(new DutyCycleOut(0.0).withEnableFOC(true));
+        intakeArmMotor.setControl(new PositionDutyCycle(armDesiredPosition).withEnableFOC(true));
     }
 }

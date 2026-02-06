@@ -73,7 +73,7 @@ public class Turret extends SubsystemBase {
             SubsystemStates.outsideTurretRange = false;
         }
         //CONVERTS DEGREES TO ROTATIONS
-        turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS));
+        turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS).withEnableFOC(true));
         
         SmartDashboard.putNumber("Turret Angle", turretDesiredAngle);
     }
