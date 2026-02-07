@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,6 +30,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
   public Robot() {
     instance = this;
@@ -69,6 +74,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    System.out.println(gyro.getAngle());
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
