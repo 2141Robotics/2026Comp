@@ -13,7 +13,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Second;
+import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.swervedrive.Vision;
 import frc.robot.util.Interpolation.InterpPoint;
 import frc.robot.util.Interpolation.InterpolationTable;
@@ -162,7 +172,6 @@ public final class Constants {
     public static final double INDEXER_SPEED = 1;
   }
 
-  
   public static class KickerConstants {
     public static final int KICKER_MOTOR_PORT = 71;
     public static final double KICKER_SPEED = 1;
@@ -170,10 +179,11 @@ public final class Constants {
     public static final double KICKER_KI = 0;
     public static final double KICKER_KD = 0;
     public static final double KICKER_KV = 0.12;
-  } 
-  
+  }
+
   public static class ElectricalConstants {
-    //Note the drive and steering motor current limits can be found in the YAGSL .json files in deploy
+    // Note the drive and steering motor current limits can be found in the YAGSL
+    // .json files in deploy
     public static final double CLIMBER_CURRENT_LIMIT = 40;
     public static final double SHOOTER_CURRENT_LIMIT = 80;
     public static final double TURRET_CURRENT_LIMIT = 20;
@@ -181,5 +191,144 @@ public final class Constants {
     public static final double INTAKE_ARM_CURRENT_LIMIT = 40;
     public static final double KICKER_CURRENT_LIMIT = 40;
     public static final double INDEXER_CURRENT_LIMIT = 40;
+  }
+
+  public static class LEDConstants {
+    public static final double BLINK_ON_LENGTH = 1;
+
+    // Amount of time the LEDs are off when blinking in seconds
+    public static final double BLINK_OFF_LENGTH = 1;
+
+    // Amount of cycles the LEDs blink for
+    public static final int BLINK_CYCLES = 5;
+
+    // The port number of the LED strip
+    public static final int LED_PORT = 4;
+
+    // The number of LEDs on the strip
+    public static final int LED_COUNT = 288;
+
+    // The offsets for the different LED strips
+    // Note: The top LED strip is counted as one and is therefore given only one
+    // offset at 105
+    public static final int[] LED_STRIP_OFFSETS = new int[] {0, 105, 181};
+
+    private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
+
+    private static final Distance LEDPATTERN_DISTANCE = Meters.of(1.0 / 120);
+
+    public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(4, Second);
+
+    public static final LEDPattern PATTERN_RED = LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_ORANGE = LEDPattern.solid(Color.kOrange).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_YELLOW = LEDPattern.solid(Color.kYellow).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_GREEN = LEDPattern.solid(Color.kGreen).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_BLUE = LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_PURPLE = LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
+    public static final LEDPattern PATTERN_OFF = LEDPattern.kOff;
+
+    // public static final LEDPattern PATTERN_DLS_GREEN =
+    // LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
+
+    public static final LEDPattern PATTERN_DLS_GREEN = LEDPattern.solid(Color.fromHSV(145, 78, 30))
+        .atBrightness(LED_BRIGHTNESS);
+
+    public static final LEDPattern PATTERN_UP = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple,
+        Color.kDarkBlue);
+    public static final LEDPattern PATTERN_DOWN = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue,
+        Color.kPurple);
+
+    public static final LEDPattern PATTERN_SCROLL = LEDPattern
+        .gradient(GradientType.kContinuous, Color.kDarkBlue, Color.kPurple)
+        .scrollAtAbsoluteSpeed(InchesPerSecond.of(20), LEDPATTERN_DISTANCE);
+
+    public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
+
+    public static final int POLICE_SIREN_FREQUENCY = 40; // frequency played by motors in Hz
+    public static final int POLICE_BLINK_SPEED = 3; // cycles per color change
+
+    // 1 Seg1 On Seg2 Off
+    // 2 Seg1 Off Seg2 Off
+    // 3 Seg1 On Seg2 Off
+    // 4 Seg1 Off Seg2 On
+    // 5 Seg1 Off Seg2 Off
+    // 6 Seg1 Off Seg2 On
+    // 7 Seg1 On Seg2 Off
+    // 8 Seg1 On Seg2 Off
+    // 9 Seg1 Off Seg2 On
+    // 10 Seg1 Off Seg2 On
+    // 11 Seg1 On Seg2 Off
+    // 12 Seg1 On Seg2 Off
+    // 13 Seg1 Off Seg2 On
+    // 14 Seg1 Off Seg2 On
+    public static final boolean[][] POLICE_PATTERN = {
+        { true, false },
+        { true, false },
+        { false, false },
+        { false, false },
+        { true, false },
+        { true, false },
+        { false, true },
+        { false, true },
+        { false, false },
+        { false, false },
+        { false, true },
+        { false, true },
+        { true, false },
+        { true, false },
+        { true, false },
+        { true, false },
+        { false, true },
+        { false, true },
+        { false, true },
+        { false, true },
+        { true, false },
+        { true, false },
+        { true, false },
+        { true, false },
+        { false, true },
+        { false, true },
+        { false, true },
+        { false, true }
+    };
+
+    // The Police pattern is broken into eight sections
+    // Blue + White + Blue + Blue + Red + Red + White + Red
+    // This stat shortens the white segments by that many LEDs
+    public static final int POLICE_WHITE_LENGTH_DIFFERENCE = 1;
+
+    public static final LEDPattern PATTERN_POLICE = LEDPattern.solid(Color.kWhite);
+    public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
+    public static final LEDPattern PATTERN_POLICE_BLUE = LEDPattern.solid(Color.kBlue);
+
+    public static final int DOTS_TRAIL_LENGTH = 10;
+
+    // How long in cycles (20 ms intervals) it takes for a dot to travel
+    // the length of the segment one way
+    public static final double DOT_FREQUENCY_CYCLES = 110;
+
+    // The color of the dots themselves
+    public static final Color DOT_COLOR = Color.kWhite;
+    // Just an object to refer to, this has no effect on the actual color
+    public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
+    // The color of the background
+    public static final LEDPattern PATTERN_DOTS_BACKGROUND = LEDPattern.kOff;
+
+    public static final LEDPattern PATTERN_RAINBOW_SCROLLING = LEDPattern.rainbow(255, 255)
+        .scrollAtAbsoluteSpeed(InchesPerSecond.of(40), LEDPATTERN_DISTANCE);
+
+    public static final LEDPattern PATTERN_PARTICLES = LEDPattern.solid(Color.kWhite);
+
+    public static final LEDPattern PATTERN_AURORA = LEDPattern.solid(Color.kWhite);
+
+    // Particle settings
+    public static final double PARTICLE_SPAWN_CHANCE = 0.4;
+    public static final double PARTICLE_SPLIT_CHANCE = 0.0;
+    public static final double PARTICLE_DISAPPEAR_CHANCE = 0.001;
+    public static final int PARTICLE_MAX_COUNT = 25;
+    public static final Color PARTICLE_COLOR = Color.kWhite;
+    public static final Color PARTICLE_BACKGROUND_COLOR = Color.kBlack; // Background is completely off
+    public static final Color PARTICLE_EXPLOSION_COLOR = Color.kBlack;
+
   }
 }

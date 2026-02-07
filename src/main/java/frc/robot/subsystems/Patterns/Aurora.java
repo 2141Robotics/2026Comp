@@ -1,51 +1,51 @@
-// package frc.robot.subsystems.Patterns;
+package frc.robot.subsystems.Patterns;
 
-// import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 
-// public class Aurora {
+public class Aurora {
 
-//   private static int cycles = 0;
+  private static int cycles = 0;
 
-//   /**
-//    * Aurora pattern with smooth, flowing colors Uses all LEDs as one
-//    *
-//    * @param buffer
-//    */
-//   public static void runAurora(AddressableLEDBufferView buffer) {
+  /**
+   * Aurora pattern with smooth, flowing colors Uses all LEDs as one
+   *
+   * @param buffer
+   */
+  public static void runAurora(AddressableLEDBufferView buffer) {
 
-//     cycles++;
- 
-//     for (int i = 0;
-//         i < buffer.getLength();
-//         i++) { // Use buffer.getLength() instead of Constants.LED_COUNT
+    cycles++;
 
-//       // Position along strip, scaled
-//       double x = (double) i / buffer.getLength();
+    for (int i = 0;
+        i < buffer.getLength();
+        i++) { // Use buffer.getLength() instead of Constants.LED_COUNT
 
-//       // Wave movement using sine functions
-//       double wave1 = Math.sin(10 * x - cycles * 0.05);
-//       double wave2 = Math.sin(7 * x + cycles * 0.01);
+      // Position along strip, scaled
+      double x = (double) i / buffer.getLength();
 
-//       // Combine waves for complexity
-//       double intensity = (wave1 + wave2) / 2.0;
+      // Wave movement using sine functions
+      double wave1 = Math.sin(10 * x - cycles * 0.05);
+      double wave2 = Math.sin(7 * x + cycles * 0.01);
 
-//       // Scale to [0,1] range
-//       intensity = (intensity + 1) / 2.0;
+      // Combine waves for complexity
+      double intensity = (wave1 + wave2) / 2.0;
 
-//       // Aurora color mix (green-blue blend)
-//       int r = 0;
-//       int g = (int) (255 * (0.9 + 0.1 * intensity));
-//       int b = (int) (55 * (intensity));
+      // Scale to [0,1] range
+      intensity = (intensity + 1) / 2.0;
 
-//       // Dim background so it looks "glowing"
-//       g = Math.min(255, g + 20);
-//       b = Math.min(255, b + 20);
+      // Aurora color mix (green-blue blend)
+      int r = 0;
+      int g = (int) (255 * (0.9 + 0.1 * intensity));
+      int b = (int) (55 * (intensity));
 
-//       r *= 0.2;
-//       g *= 0.2;
-//       b *= 0.2;
+      // Dim background so it looks "glowing"
+      g = Math.min(255, g + 20);
+      b = Math.min(255, b + 20);
 
-//       buffer.setRGB(i, r, g, b);
-//     }
-//   }
-// }
+      r *= 0.2;
+      g *= 0.2;
+      b *= 0.2;
+
+      buffer.setRGB(i, r, g, b);
+    }
+  }
+}
