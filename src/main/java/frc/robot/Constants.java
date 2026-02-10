@@ -55,8 +55,8 @@ public final class Constants {
 
   public static final class AutonConstants {
 
-    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1, 0, 0);
-    public static final PIDConstants ROTATION_PID = new PIDConstants(.1, 0, 0);
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(2, 0, 0);
+    public static final PIDConstants ROTATION_PID = new PIDConstants(2, 0, 0);
 
     public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(1),
         Meter.of(4)),

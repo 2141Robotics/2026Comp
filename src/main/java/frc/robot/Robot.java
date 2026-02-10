@@ -31,8 +31,6 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
 
-  AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
-
   public Robot() {
     instance = this;
   }
@@ -74,7 +72,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    System.out.println(gyro.getAngle());
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or

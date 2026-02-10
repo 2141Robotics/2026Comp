@@ -556,6 +556,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * facing toward 0.
    */
   public void zeroGyro() {
+    System.out.println("Zeroing Gyro");
     swerveDrive.zeroGyro();
   }
 
