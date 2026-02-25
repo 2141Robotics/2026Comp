@@ -49,9 +49,9 @@ public class Kicker extends SubsystemBase {
         this.targetRPM = rpm;
     }
 
-    public void waitForShooterSpinup() {
-        kickerMotor.setControl(velocityControl.withVelocity(0).withEnableFOC(true));
-    }
+    // public void waitForShooterSpinup() {
+    //     kickerMotor.setControl(velocityControl.withVelocity(0).withEnableFOC(true));
+    // }
 
     public void stop() {
         kickerMotor.stopMotor();
@@ -65,8 +65,8 @@ public class Kicker extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        if(targetRPM != shooterRPM.getAsDouble()){
-            waitForShooterSpinup();
-        }
+        // if(targetRPM != shooterRPM.getAsDouble()){
+        //     waitForShooterSpinup();
+        // }
     }
 }

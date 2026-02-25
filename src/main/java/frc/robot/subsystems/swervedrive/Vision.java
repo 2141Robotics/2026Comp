@@ -325,7 +325,13 @@ public class Vision {
     /**
      * Center Camera
      */
-    CENTER_CAM("Limelight 2",
+    LIMELIGHT2("Limelight 2",
+        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(41.7), 0),
+        new Translation3d(Units.inchesToMeters(13.75),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(8)),
+        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    LIMELIGHT3("Limelight 3",
         new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(41.7), 0),
         new Translation3d(Units.inchesToMeters(13.75),
             Units.inchesToMeters(0),

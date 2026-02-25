@@ -24,10 +24,6 @@ public class Intake extends SubsystemBase {
 
     private void init() {
         intakeMotor.setNeutralMode(NeutralModeValue.Coast);
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.INTAKE_CURRENT_LIMIT;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
-        intakeMotor.getConfigurator().apply(config);
 
         intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
         TalonFXConfiguration armConfig = new TalonFXConfiguration();
