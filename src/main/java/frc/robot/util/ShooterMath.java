@@ -29,16 +29,19 @@ public class ShooterMath {
         double RPM = ShooterConstants.shooterTable.get(distance);
         Translation2d initialVelocity = calculateInitialVelocity(RPM, robotPose);
         Translation2d robotVelocity = new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond).rotateBy(robotPose.getRotation());
-        return initialVelocity.plus(robotVelocity);
+        return initialVelocity.minus(robotVelocity);
+    }
+
+    private static Translation2d calculateHubLocation() {
+        if (isRedAlliance()) {
+            return redHubPosition;
+        } else {
+            return blueHubPosition;
+        }
     }
 
     private static double calculateDistanceToHub(Pose2d robotPose) {
-        Translation2d allianceHubPosition;
-        if (isRedAlliance()) {
-            allianceHubPosition = redHubPosition;
-        } else {
-            allianceHubPosition = blueHubPosition;
-        }
+        Translation2d allianceHubPosition = calculateHubLocation();
         return robotPose.getTranslation().getDistance(allianceHubPosition);
     }
 
@@ -48,12 +51,7 @@ public class ShooterMath {
      * @return angle in degrees from the robot's current position to the alliance hub
      */
     private static double calculateAngleToHub(Pose2d robotPose) {
-        Translation2d allianceHubPosition;
-        if (isRedAlliance()) {
-            allianceHubPosition = redHubPosition;
-        } else {
-            allianceHubPosition = blueHubPosition;
-        }
+        Translation2d allianceHubPosition = calculateHubLocation();
         Pose2d shooterCenter = calculateShooterCenter(robotPose);
         Translation2d toHub = allianceHubPosition.minus(shooterCenter.getTranslation());
         double angleToHub = toHub.getAngle().getDegrees() - shooterCenter.getRotation().getDegrees();
@@ -68,17 +66,16 @@ public class ShooterMath {
     /**
      * @param RPM The RPM the shooter would need to score at the given distance with no robot velocity
      */
-    private static Translation2d calculateInitialVelocity(double RPM, Pose2d robotPose){
-        double wheelRotationsPerSecond = RPM / 60.0;
-        double magnitude = ShooterConstants.SHOOTER_WHEEL_CIRCUMFRENCE * wheelRotationsPerSecond * ShooterConstants.SHOOTER_EFFICIENCY;
+    private static Translation2d calculateInitialVelocity(double rpm, Pose2d robotPose){
+        double magnitude = rpmToSpeed(rpm);
         double angleToHub = Math.toRadians(calculateAngleToHub(robotPose));
         return new Translation2d(magnitude * Math.cos(angleToHub),
                     magnitude * Math.sin(angleToHub));
     }
 
     private static double calculateRequiredRPM(Translation2d requiredVelocity) {
-        double wheelRotationsPerSecond = requiredVelocity.getNorm() / (ShooterConstants.SHOOTER_WHEEL_CIRCUMFRENCE * ShooterConstants.SHOOTER_EFFICIENCY);
-        return wheelRotationsPerSecond * 60.0;
+        double requiredSpeed = requiredVelocity.getNorm();
+        return speedToRPM(requiredSpeed);
     }
 
     
@@ -86,5 +83,18 @@ public class ShooterMath {
         var alliance = DriverStation.getAlliance();
         return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
     }
+
+    private static double rpmToSpeed (double rpm) {
+        double wheelRotationsPerSecond = rpm / 60.0;
+        double magnitude = ShooterConstants.SHOOTER_WHEEL_CIRCUMFRENCE * wheelRotationsPerSecond * ShooterConstants.SHOOTER_EFFICIENCY;
+        return magnitude;
+    }
+
+    private static double speedToRPM (double speedMetersPerSecond) {
+        double wheelRotationsPerSecond = speedMetersPerSecond / (ShooterConstants.SHOOTER_WHEEL_CIRCUMFRENCE * ShooterConstants.SHOOTER_EFFICIENCY);
+        return wheelRotationsPerSecond * 60;
+    }
+
+
 
 }
