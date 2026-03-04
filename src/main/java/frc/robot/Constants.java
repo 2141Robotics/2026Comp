@@ -88,6 +88,7 @@ public final class Constants {
     public static final double TURN_CONSTANT = 6;
 
     public static final int DRIVE_CONTROLLER_PORT = 0;
+    public static final int OPERATOR_CONTROLLER_PORT = 1;
 
     // Lowest speed the robot will go with bound trigger (left trigger as of 2026)
     // fully pressed

@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
@@ -22,6 +25,8 @@ public class Shooter extends SubsystemBase {
     private boolean adaptiveMode = false;
 
     private final SwerveSubsystem drivebase;
+
+    private Translation2d target = null;
 
     private final Kicker kicker = new Kicker(this::getRPM);
 
@@ -69,13 +74,17 @@ public class Shooter extends SubsystemBase {
         adaptiveMode = true;
     }
 
+    public void setTarget(Translation2d t) {
+        this.target = t;
+    }
+
     @Override
     public void periodic() {
         double desiredSpeed = 0.0;
         super.periodic();
         if (isShooting) {
             if (adaptiveMode) {
-                double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity());
+                double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity(), this.target);
                 setShooterRPM(adaptiveRPM);
                 desiredSpeed = adaptiveRPM;
             }else {

@@ -30,9 +30,15 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.auto.ClimberDown;
 import frc.robot.commands.auto.ClimberUp;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.util.FieldMeasurements;
 import swervelib.SwerveInputStream;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -44,60 +50,62 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
 
   final CommandXboxController driverXbox = new CommandXboxController(OperatorConstants.DRIVE_CONTROLLER_PORT);
-  
+
+  final CommandXboxController operatorXbox = new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
 
   private final Climber climber = new Climber();
-  // private final Intake intake = new Intake();
-  // private final Turret turret = new Turret(drivebase);
-  // private final Shooter shooter = new Shooter(drivebase);
-  // private final Indexer indexer = new Indexer(); 
+  private final Intake intake = new Intake();
+  private final Turret turret = new Turret(drivebase);
+  private final Shooter shooter = new Shooter(drivebase);
+  private final Indexer indexer = new Indexer();
 
   public final LEDs leds = new LEDs();
-  
+
   private final SendableChooser<Command> autoChooser;
 
-  
-  
-  DoubleSupplier leftX = () ->
-    MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND);
-  DoubleSupplier leftY = () ->
-    MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND);
+  DoubleSupplier leftX = () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND);
+  DoubleSupplier leftY = () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND);
 
-  DoubleSupplier rightX = () ->
-    MathUtil.applyDeadband(-driverXbox.getRightX(), OperatorConstants.DEADBAND);
+  DoubleSupplier rightX = () -> MathUtil.applyDeadband(-driverXbox.getRightX(), OperatorConstants.DEADBAND);
 
-DoubleSupplier rightY = () ->
-    MathUtil.applyDeadband(driverXbox.getRightY(), OperatorConstants.DEADBAND);
+  DoubleSupplier rightY = () -> MathUtil.applyDeadband(driverXbox.getRightY(), OperatorConstants.DEADBAND);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND) * -1 * (OperatorConstants.MIN_INPUTTED_SPEED + 
-      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * (1 - driverXbox.getLeftTriggerAxis()) +
-      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis()),
-      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND) * -1 * (OperatorConstants.MIN_INPUTTED_SPEED + 
-      (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED) * (1 - driverXbox.getLeftTriggerAxis()) +
-      (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED) * driverXbox.getRightTriggerAxis()))
-  .withControllerRotationAxis(() -> rightX.getAsDouble())
+      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.DEADBAND) * -1
+          * (OperatorConstants.MIN_INPUTTED_SPEED +
+              (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED)
+                  * (1 - driverXbox.getLeftTriggerAxis())
+              +
+              (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED)
+                  * driverXbox.getRightTriggerAxis()),
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND) * -1
+          * (OperatorConstants.MIN_INPUTTED_SPEED +
+              (OperatorConstants.NORMAL_INPUTTED_SPEED - OperatorConstants.MIN_INPUTTED_SPEED)
+                  * (1 - driverXbox.getLeftTriggerAxis())
+              +
+              (OperatorConstants.MAX_INPUTTED_SPEED - OperatorConstants.NORMAL_INPUTTED_SPEED)
+                  * driverXbox.getRightTriggerAxis()))
+      .withControllerRotationAxis(() -> rightX.getAsDouble())
       .allianceRelativeControl(true);
-
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative
    * input stream.
    */
 
-SwerveInputStream driveDirectAngle =
-    driveAngularVelocity.copy()
-        .withControllerHeadingAxis(rightX, rightY)
-        .headingWhile(true);
-  
-  public double test(){
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
+      .withControllerHeadingAxis(rightX, rightY)
+      .headingWhile(true);
+
+  public double test() {
     return rightX.getAsDouble();
   }
 
@@ -159,6 +167,7 @@ SwerveInputStream driveDirectAngle =
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
   }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -204,7 +213,8 @@ SwerveInputStream driveDirectAngle =
               0,
               new Constraints(Units.degreesToRadians(360),
                   Units.degreesToRadians(180))));
-      // driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      // driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new
+      // Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
           () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
@@ -224,30 +234,47 @@ SwerveInputStream driveDirectAngle =
       // Teleop Controls
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyroWithAlliance)));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
-      // driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      // driverXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleShooting, shooter));
-      // driverXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
-      // driverXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      // driverXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
-      // driverXbox.start().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      // TODO Make a drive over the bump command and bind it to the B button
+      // driverXbox.b().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+      // TODO Make a drive to a known pose command and bind it to the Y button
+      // driverXbox.y().whileTrue(drivebase.driveToPoseCommand(new Pose2d(new
+      // Translation2d(1, 4), Rotation2d.fromDegrees(90))));
       driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
       driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
       driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp, climber).repeatedly());
       driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown, climber).repeatedly());
-      driverXbox.b().onTrue(Commands.runOnce(climber::resetHeight, climber));
-      // driverXbox.rightBumper().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
-      // driverXbox.leftBumper().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
-      // driverXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
+      driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight, climber));
 
+      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.back().whileTrue(Commands.none());
 
+      operatorXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
+      operatorXbox.leftBumper().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      operatorXbox.leftBumper().onTrue(
+          Commands.runOnce(
+              () -> shooter.setTarget(FieldMeasurements.getPassingPosition(drivebase.getPose().getTranslation())),
+              shooter));
+      operatorXbox.leftBumper().onTrue(
+          Commands.runOnce(
+              () -> turret.setTarget(FieldMeasurements.getPassingPosition(drivebase.getPose().getTranslation())),
+              turret));
 
-      driverXbox.b().whileTrue(
-        drivebase.driveToPose(
-        new Pose2d(new Translation2d(1, 4), Rotation2d.fromDegrees(90)))
-      );
+      operatorXbox.rightBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
+      operatorXbox.rightBumper().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
+      operatorXbox.rightBumper().onTrue(
+          Commands.runOnce(() -> shooter.setTarget(FieldMeasurements.getHubPosition()), shooter));
+      operatorXbox.rightBumper().onTrue(
+          Commands.runOnce(() -> turret.setTarget(FieldMeasurements.getHubPosition()), turret));
+
+      operatorXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      operatorXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+
+      operatorXbox.b().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
+      operatorXbox.a().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
+      
+      //TODO Make kick and indexer controls and bind them to the operator controller
+      //operatorXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
     }
 
   }
@@ -266,7 +293,7 @@ SwerveInputStream driveDirectAngle =
     drivebase.setMotorBrake(brake);
   }
 
-  public void climberUp(){
+  public void climberUp() {
     climber.climberUp();
   }
 }

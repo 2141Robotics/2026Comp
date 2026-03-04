@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
@@ -21,6 +22,8 @@ public class Turret extends SubsystemBase {
     private double turretDesiredAngle = 0.0;
 
     private final SwerveSubsystem drivebase;
+
+    private Translation2d target = null;
 
     public Turret(SwerveSubsystem d) {
         this.drivebase = d;
@@ -55,11 +58,15 @@ public class Turret extends SubsystemBase {
         adaptiveMode = true;
     }
 
+    public void setTarget(Translation2d t) {
+        this.target = t;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
         if(adaptiveMode){
-            turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), drivebase.getRobotVelocity());
+            turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), drivebase.getRobotVelocity(), target);
             SmartDashboard.putNumber("Angle To Hub", turretDesiredAngle);
         }
         if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
