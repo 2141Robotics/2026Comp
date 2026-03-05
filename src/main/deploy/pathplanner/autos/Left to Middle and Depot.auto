@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Leave Left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Half Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Return Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left To Depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Collect Depot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Left",
+  "choreoAuto": false
+}

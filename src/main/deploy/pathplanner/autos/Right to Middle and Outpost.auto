@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Leave Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Half Collect"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Return Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to Outpost"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Right",
+  "choreoAuto": false
+}
