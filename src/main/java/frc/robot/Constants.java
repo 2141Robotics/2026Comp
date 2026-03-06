@@ -126,8 +126,8 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int INTAKE_MOTOR_PORT = 41;
-    public static final int INTAKE_ARM_MOTOR_PORT = 42;
+    public static final int INTAKE_MOTOR_PORT = 51;
+    public static final int INTAKE_ARM_MOTOR_PORT = 52;
     public static final double INTAKE_SPEED = 1.0; // Adjust as necessary
     public static final double INTAKE_ARM_KP = 0.1;
     public static final double INTAKE_ARM_KI = 0;
@@ -137,7 +137,7 @@ public final class Constants {
   }
 
   public static class TurretConstants {
-    public static final int TURRET_MOTOR_PORT = 61;
+    public static final int TURRET_MOTOR_PORT = 44;
     public static final double TURRET_SPEED = 5.0; // Adjust as necessary
     public static final double TURRET_KP = 0;
     public static final double TURRET_KI = 0;
@@ -148,7 +148,7 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTER_MOTOR_PORT = 51;
+    public static final int SHOOTER_MOTOR_PORT = 41;
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
     // TODO populate with real values
     public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
@@ -169,12 +169,12 @@ public final class Constants {
   }
 
   public static class IndexerConstants {
-    public static final int INDEXER_MOTOR_PORT = 61;
+    public static final int INDEXER_MOTOR_PORT = 43;
     public static final double INDEXER_SPEED = 1;
   }
 
   public static class KickerConstants {
-    public static final int KICKER_MOTOR_PORT = 71;
+    public static final int KICKER_MOTOR_PORT = 42;
     public static final double KICKER_SPEED = 1;
     public static final double KICKER_KP = 0.1;
     public static final double KICKER_KI = 0;
