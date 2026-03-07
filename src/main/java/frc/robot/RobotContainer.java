@@ -30,7 +30,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.auto.ClimberDown;
 import frc.robot.commands.auto.ClimberUp;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
@@ -61,8 +60,6 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Turret turret = new Turret(drivebase);
   private final Shooter shooter = new Shooter(drivebase);
-  private final Indexer indexer = new Indexer();
-
   public final LEDs leds = new LEDs();
 
   private final SendableChooser<Command> autoChooser;

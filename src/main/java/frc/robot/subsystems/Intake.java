@@ -1,61 +1,63 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-    private final TalonFX intakeMotor;
-    private final TalonFX intakeArmMotor;
+    private final SparkMax intakeMotor;
+    private final SparkMax intakeArmMotor;
     private boolean isArmDeployed = false;
     private double armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
 
     public Intake() {
-        intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_PORT);
-        intakeArmMotor = new TalonFX(IntakeConstants.INTAKE_ARM_MOTOR_PORT);
+        intakeMotor = new SparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+        intakeArmMotor = new SparkMax(IntakeConstants.INTAKE_ARM_MOTOR_PORT, MotorType.kBrushless);
         init();
     }
 
     private void init() {
-        intakeMotor.setNeutralMode(NeutralModeValue.Coast);
+        SparkMaxConfig intakeConfig = new SparkMaxConfig();
+        intakeConfig.idleMode(IdleMode.kCoast);
+        intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
-        TalonFXConfiguration armConfig = new TalonFXConfiguration();
-        armConfig.Slot0.kP = IntakeConstants.INTAKE_ARM_KP;
-        armConfig.Slot0.kI = IntakeConstants.INTAKE_ARM_KI;
-        armConfig.Slot0.kD = IntakeConstants.INTAKE_ARM_KD;
-        armConfig.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.INTAKE_ARM_CURRENT_LIMIT;
-        armConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        intakeArmMotor.getConfigurator().apply(armConfig);
+        SparkMaxConfig armConfig = new SparkMaxConfig();
+        armConfig.idleMode(IdleMode.kBrake);
+        armConfig.smartCurrentLimit(ElectricalConstants.INTAKE_ARM_CURRENT_LIMIT);
+        armConfig.closedLoop
+            .p(IntakeConstants.INTAKE_ARM_KP)
+            .i(IntakeConstants.INTAKE_ARM_KI)
+            .d(IntakeConstants.INTAKE_ARM_KD);
+        intakeArmMotor.configure(armConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void runIntake() {
-        intakeMotor.setControl(new DutyCycleOut(IntakeConstants.INTAKE_SPEED).withEnableFOC(true));
+        intakeMotor.set(IntakeConstants.INTAKE_SPEED);
     }
 
     public void toggleDeployment() {
         isArmDeployed = !isArmDeployed;
-        if (isArmDeployed) {
-            armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
-        } else {
-            armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
-        }
+        armDesiredPosition = isArmDeployed 
+            ? IntakeConstants.INTAKE_ARM_MIN_POSITION 
+            : IntakeConstants.INTAKE_ARM_MAX_POSITION;
     }
 
-    public void moveOut(){
+    public void moveOut() {
         armDesiredPosition -= IntakeConstants.INTAKE_SPEED;
         if (armDesiredPosition < IntakeConstants.INTAKE_ARM_MIN_POSITION) {
             armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
         }
     }
 
-    public void moveIn(){
+    public void moveIn() {
         armDesiredPosition += IntakeConstants.INTAKE_SPEED;
         if (armDesiredPosition > IntakeConstants.INTAKE_ARM_MAX_POSITION) {
             armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
@@ -65,7 +67,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        intakeMotor.setControl(new DutyCycleOut(0.0).withEnableFOC(true));
-        intakeArmMotor.setControl(new PositionDutyCycle(armDesiredPosition).withEnableFOC(true));
+        intakeMotor.set(0.0);
+        intakeArmMotor.getClosedLoopController().setSetpoint(armDesiredPosition, ControlType.kPosition);
     }
 }

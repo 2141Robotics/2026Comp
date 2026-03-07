@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,33 +19,32 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.util.ShooterMath;
 
 public class Turret extends SubsystemBase {
-    private final TalonFX turretMotor;
+    private final SparkMax turretMotor;
 
     private boolean adaptiveMode = false;
-
     private double turretDesiredAngle = 0.0;
 
     private final SwerveSubsystem drivebase;
-
     private Translation2d target = null;
 
     public Turret(SwerveSubsystem d) {
         this.drivebase = d;
-        turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_PORT);
+        turretMotor = new SparkMax(TurretConstants.TURRET_MOTOR_PORT, MotorType.kBrushless);
         init();
     }
 
     private void init() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.Slot0.kP = TurretConstants.TURRET_KP;
-        config.Slot0.kI = TurretConstants.TURRET_KI;
-        config.Slot0.kD = TurretConstants.TURRET_KD;
-        config.Feedback.SensorToMechanismRatio = TurretConstants.TURRET_GEAR_RATIO;
-        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.TURRET_CURRENT_LIMIT;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
-        turretMotor.getConfigurator().apply(config);
-        turretMotor.setNeutralMode(NeutralModeValue.Brake);
-        turretMotor.setPosition(0.0);
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.idleMode(IdleMode.kBrake);
+        config.smartCurrentLimit((int) ElectricalConstants.TURRET_CURRENT_LIMIT);
+        config.encoder.positionConversionFactor(1.0 / TurretConstants.TURRET_GEAR_RATIO);
+        config.closedLoop
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .p(TurretConstants.TURRET_KP)
+            .i(TurretConstants.TURRET_KI)
+            .d(TurretConstants.TURRET_KD);
+        turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        turretMotor.getEncoder().setPosition(0.0);
     }
 
     public void turnLeft() {
@@ -65,26 +68,27 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        if(adaptiveMode){
+        if (adaptiveMode) {
             turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), drivebase.getRobotVelocity(), target);
-            SmartDashboard.putNumber("Angle To Hub", turretDesiredAngle);
+            SmartDashboard.putNumber("Angle To Target", turretDesiredAngle);
         }
-        if(turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE){
+
+        if (turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE) {
             turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
-            if(adaptiveMode){
-                SubsystemStates.outsideTurretRange = true;
-            }
-        } else if(turretDesiredAngle < TurretConstants.TURRET_MIN_ANGLE){
+            if (adaptiveMode) SubsystemStates.outsideTurretRange = true;
+        } else if (turretDesiredAngle < TurretConstants.TURRET_MIN_ANGLE) {
             turretDesiredAngle = TurretConstants.TURRET_MIN_ANGLE;
-            if(adaptiveMode){
-                SubsystemStates.outsideTurretRange = true;
-            }
-        } else{
+            if (adaptiveMode) SubsystemStates.outsideTurretRange = true;
+        } else {
             SubsystemStates.outsideTurretRange = false;
         }
-        //CONVERTS DEGREES TO ROTATIONS
-        turretMotor.setControl(new PositionDutyCycle(turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS).withEnableFOC(true));
-        
+
+        // CONVERTS DEGREES TO ROTATIONS
+        turretMotor.getClosedLoopController().setSetpoint(
+            turretDesiredAngle * MathConstants.DEGREES_TO_ROTATIONS,
+            ControlType.kPosition
+        );
+
         SmartDashboard.putNumber("Turret Angle", turretDesiredAngle);
     }
 }

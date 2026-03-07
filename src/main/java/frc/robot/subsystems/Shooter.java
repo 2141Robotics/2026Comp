@@ -1,34 +1,38 @@
 package frc.robot.subsystems;
 
-import java.lang.reflect.Field;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
+import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.util.ShooterMath;
 
 public class Shooter extends SubsystemBase {
 
-    private final TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_PORT); // CAN ID
+    private final TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_PORT);
+    private final SparkMax kickerMotor = new SparkMax(KickerConstants.KICKER_MOTOR_PORT, MotorType.kBrushless);
+    private final SparkMax indexerMotor = new SparkMax(IndexerConstants.INDEXER_MOTOR_PORT, MotorType.kBrushless);
 
     private final VelocityVoltage velocityControl = new VelocityVoltage(0);
 
     private boolean isShooting = false;
-
     private boolean adaptiveMode = false;
 
     private final SwerveSubsystem drivebase;
-
     private Translation2d target = null;
-
-    private final Kicker kicker = new Kicker(this::getRPM);
 
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
@@ -36,28 +40,33 @@ public class Shooter extends SubsystemBase {
     }
 
     private void init() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
+        shooterConfig.Slot0.kP = ShooterConstants.SHOOTER_KP;
+        shooterConfig.Slot0.kI = ShooterConstants.SHOOTER_KI;
+        shooterConfig.Slot0.kD = ShooterConstants.SHOOTER_KD;
+        shooterConfig.Slot0.kV = ShooterConstants.SHOOTER_KV;
+        shooterConfig.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.SHOOTER_CURRENT_LIMIT;
+        shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        shooterMotor.getConfigurator().apply(shooterConfig);
 
-        // PID gains (start small!)
-        config.Slot0.kP = ShooterConstants.SHOOTER_KP;
-        config.Slot0.kI = ShooterConstants.SHOOTER_KI;
-        config.Slot0.kD = ShooterConstants.SHOOTER_KD;
-        config.Slot0.kV = ShooterConstants.SHOOTER_KV; // Feedforward (VERY important for shooters)
-        config.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.SHOOTER_CURRENT_LIMIT;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        SparkMaxConfig kickerConfig = new SparkMaxConfig();
+        kickerConfig.idleMode(IdleMode.kCoast);
+        kickerMotor.configure(kickerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        shooterMotor.getConfigurator().apply(config);
+        SparkMaxConfig indexerConfig = new SparkMaxConfig();
+        indexerConfig.idleMode(IdleMode.kCoast);
+        indexerMotor.configure(indexerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void setShooterRPM(double rpm) {
-        double rps = rpm / 60.0; // rotations per second
+        double rps = rpm / 60.0;
         shooterMotor.setControl(velocityControl.withVelocity(rps).withEnableFOC(true));
-        kicker.setRPM(rpm);
     }
 
     public void stop() {
         shooterMotor.stopMotor();
-        kicker.stop();
+        kickerMotor.stopMotor();
+        indexerMotor.stopMotor();
     }
 
     public double getRPM() {
@@ -80,18 +89,20 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double desiredSpeed = 0.0;
         super.periodic();
+        double desiredSpeed = 0.0;
         if (isShooting) {
             if (adaptiveMode) {
                 double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity(), this.target);
                 setShooterRPM(adaptiveRPM);
                 desiredSpeed = adaptiveRPM;
-            }else {
+            } else {
                 SubsystemStates.outsideShooterRange = false;
                 setShooterRPM(ShooterConstants.SHOOTER_DEFAULT_RPM);
                 desiredSpeed = ShooterConstants.SHOOTER_DEFAULT_RPM;
             }
+            kickerMotor.set(KickerConstants.KICKER_SPEED);
+            indexerMotor.set(IndexerConstants.INDEXER_SPEED);
         } else {
             stop();
         }

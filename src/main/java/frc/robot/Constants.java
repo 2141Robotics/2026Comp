@@ -170,28 +170,24 @@ public final class Constants {
 
   public static class IndexerConstants {
     public static final int INDEXER_MOTOR_PORT = 43;
-    public static final double INDEXER_SPEED = 1;
+    public static final double INDEXER_SPEED = 0.1;
   }
 
   public static class KickerConstants {
     public static final int KICKER_MOTOR_PORT = 42;
-    public static final double KICKER_SPEED = 1;
-    public static final double KICKER_KP = 0.1;
-    public static final double KICKER_KI = 0;
-    public static final double KICKER_KD = 0;
-    public static final double KICKER_KV = 0.12;
+    public static final double KICKER_SPEED = 0.1;
   }
 
   public static class ElectricalConstants {
     // Note the drive and steering motor current limits can be found in the YAGSL
     // .json files in deploy
-    public static final double CLIMBER_CURRENT_LIMIT = 80;
-    public static final double SHOOTER_CURRENT_LIMIT = 40;
-    public static final double TURRET_CURRENT_LIMIT = 10;
-    public static final double INTAKE_CURRENT_LIMIT = 20;
-    public static final double INTAKE_ARM_CURRENT_LIMIT = 20;
-    public static final double KICKER_CURRENT_LIMIT = 20;
-    public static final double INDEXER_CURRENT_LIMIT = 20;
+    public static final int CLIMBER_CURRENT_LIMIT = 80;
+    public static final int SHOOTER_CURRENT_LIMIT = 40;
+    public static final int TURRET_CURRENT_LIMIT = 10;
+    public static final int INTAKE_CURRENT_LIMIT = 20;
+    public static final int INTAKE_ARM_CURRENT_LIMIT = 20;
+    public static final int KICKER_CURRENT_LIMIT = 20;
+    public static final int INDEXER_CURRENT_LIMIT = 20;
   }
 
   public static class LEDConstants {
