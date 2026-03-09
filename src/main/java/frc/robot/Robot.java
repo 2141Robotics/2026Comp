@@ -5,12 +5,14 @@
 package frc.robot;
 
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.SubsystemStates;
 
 /**
@@ -98,6 +100,12 @@ public class Robot extends TimedRobot {
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
       disabledTimer.reset();
+    }
+    if(SmartDashboard.getBoolean("Limelight 2/hasTarget", false) || 
+      SmartDashboard.getBoolean("Limelight 3/hasTarget", false)){
+      m_robotContainer.setLEDPattern(LEDConstants.PATTERN_FIRE);
+    }else{
+      m_robotContainer.setLEDPattern(LEDConstants.PATTERN_RED);
     }
   }
 
