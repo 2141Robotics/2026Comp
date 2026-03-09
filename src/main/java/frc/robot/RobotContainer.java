@@ -28,9 +28,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.auto.ClimberDown;
-import frc.robot.commands.auto.ClimberUp;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
@@ -57,7 +54,7 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/falcon"));
 
-  private final Climber climber = new Climber();
+  // private final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Turret turret = new Turret(drivebase);
   private final Shooter shooter = new Shooter(drivebase);
@@ -147,8 +144,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("ClimberUp", new ClimberUp(climber));
-    NamedCommands.registerCommand("ClimberDown", new ClimberDown(climber));
+    // NamedCommands.registerCommand("ClimberUp", new ClimberUp(climber));
+    // NamedCommands.registerCommand("ClimberDown", new ClimberDown(climber));
     // Configure the trigger bindings
     configureBindings();
     // Build an auto chooser. This will use Commands.none() as the default option.
@@ -238,11 +235,11 @@ public class RobotContainer {
       // TODO Make a drive to a known pose command and bind it to the Y button
       // driverXbox.y().whileTrue(drivebase.driveToPoseCommand(new Pose2d(new
       // Translation2d(1, 4), Rotation2d.fromDegrees(90))));
-      driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
-      driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp, climber).repeatedly());
-      driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown, climber).repeatedly());
-      driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight, climber));
+      // driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
+      // driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
+      // driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp, climber).repeatedly());
+      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown, climber).repeatedly());
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight, climber));
 
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
@@ -291,9 +288,9 @@ public class RobotContainer {
     drivebase.setMotorBrake(brake);
   }
 
-  public void climberUp() {
-    climber.climberUp();
-  }
+  // public void climberUp() {
+  //   climber.climberUp();
+  // }
 
   public void setLEDPattern(LEDPattern pattern) {
     leds.setPatternCommand(pattern);
