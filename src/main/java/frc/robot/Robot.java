@@ -5,7 +5,6 @@
 package frc.robot;
 
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -81,6 +80,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     SmartDashboard.putBoolean("Inside Shooter Range", !SubsystemStates.outsideShooterRange);
     SmartDashboard.putBoolean("Inside Turret Range", !SubsystemStates.outsideTurretRange);
+
     CommandScheduler.getInstance().run();
   }
 

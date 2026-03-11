@@ -43,7 +43,7 @@ import swervelib.math.Matter;
  */
 public final class Constants {
 
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = (133) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED = Units.feetToMeters(14.5);
@@ -115,15 +115,15 @@ public final class Constants {
 
   }
 
-  public static class ClimberConstants {
-    public static final double CLIMBER_SPEED = 2; // Adjust as necessary
-    public static final int CLIMBER_MOTOR_PORT = 31;
-    public static final double CLIMBER_HEIGHT_MAX = 51.5; // max height of climber
-    public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
-    public static final double CLIMBER_KP = 0.1;
-    public static final double CLIMBER_KI = 0.0;
-    public static final double CLIMBER_KD = 0.0;
-  }
+  // public static class ClimberConstants {
+  //   public static final double CLIMBER_SPEED = 2; // Adjust as necessary
+  //   public static final int CLIMBER_MOTOR_PORT = 31;
+  //   public static final double CLIMBER_HEIGHT_MAX = 51.5; // max height of climber
+  //   public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
+  //   public static final double CLIMBER_KP = 0.1;
+  //   public static final double CLIMBER_KI = 0.0;
+  //   public static final double CLIMBER_KD = 0.0;
+  // }
 
   public static class IntakeConstants {
     public static final int INTAKE_MOTOR_PORT = 51;
@@ -157,7 +157,7 @@ public final class Constants {
         new InterpPoint(2.5, 4100),
         new InterpPoint(3.0, 4700)));
     // How far the shooter is offset from the robot center, in meters
-    public static final double SHOOTER_OFFSET = 10 * 0.0254;
+    public static final Translation2d SHOOTER_OFFSET = new Translation2d(5.587 * 0.0254, 5 * 0.0254);
     // Diameter of the shooter wheel in meters
     public static final double SHOOTER_WHEEL_CIRCUMFRENCE = 4 * 0.0254 * MathConstants.PI;
     // Efficiency factor to account for losses, assumed to be linear
@@ -181,7 +181,7 @@ public final class Constants {
   public static class ElectricalConstants {
     // Note the drive and steering motor current limits can be found in the YAGSL
     // .json files in deploy
-    public static final int CLIMBER_CURRENT_LIMIT = 80;
+    //public static final int CLIMBER_CURRENT_LIMIT = 80;
     public static final int SHOOTER_CURRENT_LIMIT = 40;
     public static final int TURRET_CURRENT_LIMIT = 10;
     public static final int INTAKE_CURRENT_LIMIT = 20;

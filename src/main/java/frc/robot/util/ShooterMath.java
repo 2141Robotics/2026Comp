@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterMath {
@@ -51,9 +50,8 @@ public class ShooterMath {
     }
 
     private static Pose2d calculateShooterCenter(Pose2d robotPose) {
-        Translation2d shooterOffset = new Translation2d(ShooterConstants.SHOOTER_OFFSET, 0)
-                .rotateBy(robotPose.getRotation());
-        return new Pose2d(robotPose.getTranslation().plus(shooterOffset), robotPose.getRotation());
+                
+        return new Pose2d(robotPose.getTranslation().plus(ShooterConstants.SHOOTER_OFFSET.rotateBy(robotPose.getRotation())), robotPose.getRotation());
     }
 
     /**
