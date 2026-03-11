@@ -182,11 +182,11 @@ public final class Constants {
     // Note the drive and steering motor current limits can be found in the YAGSL
     // .json files in deploy
     //public static final int CLIMBER_CURRENT_LIMIT = 80;
-    public static final int SHOOTER_CURRENT_LIMIT = 40;
+    public static final int SHOOTER_CURRENT_LIMIT = 30;
     public static final int TURRET_CURRENT_LIMIT = 10;
-    public static final int INTAKE_CURRENT_LIMIT = 20;
+    public static final int INTAKE_CURRENT_LIMIT = 30;
     public static final int INTAKE_ARM_CURRENT_LIMIT = 20;
-    public static final int KICKER_CURRENT_LIMIT = 20;
+    public static final int KICKER_CURRENT_LIMIT = 10;
     public static final int INDEXER_CURRENT_LIMIT = 20;
   }
 
