@@ -170,12 +170,12 @@ public final class Constants {
 
   public static class IndexerConstants {
     public static final int INDEXER_MOTOR_PORT = 43;
-    public static final double INDEXER_SPEED = 0.1;
+    public static final double INDEXER_SPEED = 0.02;
   }
 
   public static class KickerConstants {
     public static final int KICKER_MOTOR_PORT = 42;
-    public static final double KICKER_SPEED = 0.1;
+    public static final double KICKER_SPEED = 0.3;
   }
 
   public static class ElectricalConstants {
