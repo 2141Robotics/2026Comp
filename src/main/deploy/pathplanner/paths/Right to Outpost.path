@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 0.6693996710573864,
+        "x": 0.669,
         "y": 0.6486677631634483
       },
       "prevControl": {
-        "x": 1.385452302636334,
+        "x": 1.3850526315789475,
         "y": 0.6561266447423963
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     }
   ],
   "rotationTargets": [],

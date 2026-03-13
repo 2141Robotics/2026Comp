@@ -19,10 +19,12 @@ public final class ShootAtHubCommand extends Command{
 
   private final Shooter shooter;
   private final Turret turret;
+  private final Double maxDowntime;
 
-  public ShootAtHubCommand(Shooter shooter, Turret turret) {
+  public ShootAtHubCommand(Shooter shooter, Turret turret, Double maxDowntime) {
     this.shooter = shooter;
     this.turret = turret;
+    this.maxDowntime = maxDowntime;
     addRequirements(shooter, turret);
   }
 
@@ -32,6 +34,7 @@ public final class ShootAtHubCommand extends Command{
    */
   @Override
   public void initialize() {
+    System.out.println("Shooting at hub!");
     shooter.setTarget(FieldMeasurements.getHubPosition());
     turret.setTarget(FieldMeasurements.getHubPosition());
     shooter.toggleAdaptiveShooting();
@@ -68,7 +71,11 @@ public final class ShootAtHubCommand extends Command{
    */
   @Override
   public boolean isFinished() {
-    return shooter.timeSinceLastShot() > AutonConstants.MAX_SHOOTER_DOWNTIME;
+    if (maxDowntime == null) {
+      return false;
+    } else {
+      return shooter.timeSinceLastShot() > maxDowntime;
+    }
   }
 
   /**

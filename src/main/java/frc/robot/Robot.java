@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.SubsystemStates;
+import frc.robot.util.FieldMeasurements;
+import frc.robot.util.MatchData;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -81,6 +82,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Inside Shooter Range", !SubsystemStates.outsideShooterRange);
     SmartDashboard.putBoolean("Inside Turret Range", !SubsystemStates.outsideTurretRange);
 
+    SmartDashboard.putNumber("Time Remaining", DriverStation.getMatchTime());
+    SmartDashboard.putNumber("Time Left in Shift", MatchData.getShiftTime());
+    SmartDashboard.putBoolean("Alliance Hub Active", MatchData.isHubActive());
+
     CommandScheduler.getInstance().run();
   }
 
@@ -101,10 +106,10 @@ public class Robot extends TimedRobot {
       disabledTimer.stop();
       disabledTimer.reset();
     }
-    if(SmartDashboard.getBoolean("Limelight 2/hasTarget", false) || 
-      SmartDashboard.getBoolean("Limelight 3/hasTarget", false)){
+    if (SmartDashboard.getBoolean("Limelight 2/hasTarget", false) ||
+        SmartDashboard.getBoolean("Limelight 3/hasTarget", false)) {
       m_robotContainer.setLEDPattern(LEDConstants.PATTERN_FIRE);
-    }else{
+    } else {
       m_robotContainer.setLEDPattern(LEDConstants.PATTERN_RED);
     }
   }
@@ -117,6 +122,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    m_robotContainer.setTarget(FieldMeasurements.getHubPosition());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

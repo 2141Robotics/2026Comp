@@ -24,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.auto.ShootAtHubCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
@@ -150,7 +152,8 @@ public class RobotContainer {
     initAutomonousChooser();
     drivebase.zeroGyro();
     NamedCommands.registerCommand("Test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("shoot", new ShootAtHubCommand(shooter, turret));
+    NamedCommands.registerCommand("shootTillEmpty", new ShootAtHubCommand(shooter, turret, AutonConstants.MAX_SHOOTER_DOWNTIME));
+    NamedCommands.registerCommand("shootForever", new ShootAtHubCommand(shooter, turret, null));
     NamedCommands.registerCommand("deployIntake", Commands.runOnce(() -> intake.deployIntake(), intake));
     NamedCommands.registerCommand("retractIntake", Commands.runOnce(() -> intake.retractIntake(), intake));
     NamedCommands.registerCommand("runIntake", Commands.runOnce(() -> intake.runIntake(), intake));
@@ -295,5 +298,10 @@ public class RobotContainer {
 
   public void setLEDPattern(LEDPattern pattern) {
     leds.setPatternCommand(pattern);
+  }
+
+  public void setTarget(Translation2d target) {
+    turret.setTarget(target);
+    shooter.setTarget(target);
   }
 }

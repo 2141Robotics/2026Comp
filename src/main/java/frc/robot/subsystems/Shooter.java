@@ -86,11 +86,13 @@ public class Shooter extends SubsystemBase {
     }
 
     public void toggleShooting() {
+        resetShotTimer();
         isShooting = !isShooting;
         adaptiveMode = false;
     }
 
     public void toggleAdaptiveShooting() {
+        resetShotTimer();
         isShooting = !isShooting;
         adaptiveMode = true;
     }
@@ -107,8 +109,7 @@ public class Shooter extends SubsystemBase {
         double shooterCurrent = shooterMotor.getStatorCurrent().getValueAsDouble();
         // if we cross the threshold from below -> above, consider that a shot and reset the timer
         if (shooterCurrent > ShooterConstants.CURRENT_SPIKE_THRESHOLD && lastShooterCurrent <= ShooterConstants.CURRENT_SPIKE_THRESHOLD) {
-            shotTimer.reset();
-            shotTimer.start();
+            resetShotTimer();
         }
         lastShooterCurrent = shooterCurrent;
         if (isShooting) {
@@ -133,6 +134,11 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putString("Target", target != null ? String.format("(%.2f, %.2f)", target.getX(), target.getY()) : "None");
         SmartDashboard.putNumber("Kicker Output", kickerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Output", indexerMotor.getAppliedOutput());
+    }
+
+    private void resetShotTimer() {
+        shotTimer.reset();
+        shotTimer.start();
     }
 
     public double timeSinceLastShot() {
