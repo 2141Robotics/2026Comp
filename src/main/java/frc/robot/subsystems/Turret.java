@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
@@ -70,7 +71,8 @@ public class Turret extends SubsystemBase {
         super.periodic();
         if (adaptiveMode) {
             turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), drivebase.getRobotVelocity(), target);
-            SmartDashboard.putNumber("Angle To Target", turretDesiredAngle);
+            double turretAngleError = turretDesiredAngle - ShooterMath.calculateAdaptiveTurretAngle(drivebase.getPose(), new ChassisSpeeds(), target);
+            SmartDashboard.putNumber("Turret Angle Compensation", turretAngleError);
         }
 
         if (turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE) {
@@ -89,6 +91,7 @@ public class Turret extends SubsystemBase {
             ControlType.kPosition
         );
 
-        SmartDashboard.putNumber("Turret Angle", turretDesiredAngle);
+        SmartDashboard.putNumber("Turret Desired Angle", turretDesiredAngle);
+        SmartDashboard.putNumber("Turret Set Angle", turretMotor.getAbsoluteEncoder().getPosition());
     }
 }

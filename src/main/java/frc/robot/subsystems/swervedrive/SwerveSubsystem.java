@@ -75,8 +75,14 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory) {
-    Pose2d startingPose = isRedAlliance() ? AutonConstants.RED_STARTING_POSE
-        : AutonConstants.BLUE_STARTING_POSE;
+    Pose2d startingPose;
+    if(isRedAlliance()) {
+      System.out.println("SETTING ME TO RED ALLIANCE STARTING POSE");
+      startingPose = AutonConstants.RED_STARTING_POSE;
+    } else {
+      System.out.println("SETTING ME TO BLUE ALLIANCE STARTING POSE");
+      startingPose = AutonConstants.BLUE_STARTING_POSE;
+    }
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
     // objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -158,64 +164,65 @@ public class SwerveSubsystem extends SubsystemBase {
     // store this in your Constants file
     RobotConfig config;
     try {
-      config = RobotConfig.fromGUISettings();
-
-      final boolean enableFeedforward = true;
-      // Configure AutoBuilder last
-      AutoBuilder.configure(
-          this::getPose,
-          // Robot pose supplier
-          this::resetOdometry,
-          // Method to reset odometry (will be called if your auto has a starting pose)
-          this::getRobotVelocity,
-          // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-          (speedsRobotRelative, moduleFeedForwards) -> {
-            if (enableFeedforward) {
-              swerveDrive.drive(
-                  speedsRobotRelative,
-                  swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
-                  moduleFeedForwards.linearForces());
-            } else {
-              swerveDrive.setChassisSpeeds(speedsRobotRelative);
-            }
-          },
-          // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also
-          // optionally outputs individual module feedforwards
-          new PPHolonomicDriveController(
-              // PPHolonomicController is the built in path following controller for holonomic
-              // drive trains
-              AutonConstants.TRANSLATION_PID,
-              AutonConstants.ROTATION_PID
-          ),
-          config,
-          // The robot configuration
-          () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red
-            // alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) {
-              return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
-          },
-          this
-      // Reference to this subsystem to set requirements
-      );
-
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
-
-    // Preload PathPlanner Path finding
-    // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
-    PathfindingCommand.warmupCommand().schedule();
-  }
-
-  /**
+            config = RobotConfig.fromGUISettings();
+      
+            final boolean enableFeedforward = true;
+            // Configure AutoBuilder last
+            AutoBuilder.configure(
+                this::getPose,
+                // Robot pose supplier
+                this::resetOdometry,
+                // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getRobotVelocity,
+                // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                (speedsRobotRelative, moduleFeedForwards) -> {
+                  if (enableFeedforward) {
+                    swerveDrive.drive(
+                        speedsRobotRelative,
+                        swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
+                        moduleFeedForwards.linearForces());
+                  } else {
+                    swerveDrive.setChassisSpeeds(speedsRobotRelative);
+                  }
+                },
+                // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also
+                // optionally outputs individual module feedforwards
+                new PPHolonomicDriveController(
+                    // PPHolonomicController is the built in path following controller for holonomic
+                    // drive trains
+                    AutonConstants.TRANSLATION_PID,
+                    AutonConstants.ROTATION_PID
+                ),
+                config,
+                // The robot configuration
+                () -> {
+                  // Boolean supplier that controls when the path will be mirrored for the red
+                  // alliance
+                  // This will flip the path being followed to the red side of the field.
+                  // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      
+                  var alliance = DriverStation.getAlliance();
+                  if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                  }
+                  return false;
+                },
+                this
+            // Reference to this subsystem to set requirements
+            );
+      
+          } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+          }
+      
+          // Preload PathPlanner Path finding
+          // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
+          PathfindingCommand.warmupCommand().schedule();
+        }
+      
+        
+        /**
    * Aim the robot at the target returned by PhotonVision.
    *
    * @return A {@link Command} which will run the alignment.
@@ -568,8 +575,12 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   private boolean isRedAlliance() {
     var alliance = DriverStation.getAlliance();
-    return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-  }
+    if (alliance.isEmpty()) {
+        DriverStation.reportWarning("Alliance color unavailable — FMS data not yet received. Defaulting to Blue.", false);
+        return false;
+    }
+    return alliance.get() == DriverStation.Alliance.Red;
+}
 
   /**
    * This will zero (calibrate) the robot to assume the current position is facing
@@ -578,6 +589,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * If red alliance rotate the robot 180 after the drviebase zero command
    */
   public void zeroGyroWithAlliance() {
+    System.out.println("Zeroing Gyro with Alliance");
     if (isRedAlliance()) {
       zeroGyro();
       // Set the pose 180 degrees

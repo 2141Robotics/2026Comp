@@ -11,10 +11,10 @@ public class FieldMeasurements {
     private static final Translation2d redHubPosition = new Translation2d((651.2 - (158.6 + (47 / 2.0))) * 0.0254,
             (317.7 / 2.0) * 0.0254);
 
-    private static final Translation2d bluePassingPositionLeft = null;
-    private static final Translation2d bluePassingPositionRight = null;
-    private static final Translation2d redPassingPositionLeft = null;
-    private static final Translation2d redPassingPositionRight = null;
+    private static final Translation2d bluePassingPositionLeft = new Translation2d(3.5, 5.5);
+    private static final Translation2d bluePassingPositionRight = new Translation2d(3.5, 2.5);
+    private static final Translation2d redPassingPositionLeft = new Translation2d(16 - 3.5, 5.5);
+    private static final Translation2d redPassingPositionRight = new Translation2d(16 - 3.5, 2.5);
 
     private static boolean isRedAlliance() {
         var alliance = DriverStation.getAlliance();
@@ -40,15 +40,10 @@ public class FieldMeasurements {
         } else {
             if (robotPosition.getDistance(bluePassingPositionLeft) < robotPosition
                     .getDistance(bluePassingPositionRight)) {
-                if (robotPosition.getDistance(bluePassingPositionLeft) < robotPosition
-                        .getDistance(bluePassingPositionRight)) {
-                    return bluePassingPositionLeft;
-                } else {
-                    return bluePassingPositionRight;
-                }
+                return bluePassingPositionLeft;
+            } else {
+                return bluePassingPositionRight;
             }
         }
-        System.out.println("Error in fieldmeasurements.java: could not determine passing position");
-        return null;
     }
 }

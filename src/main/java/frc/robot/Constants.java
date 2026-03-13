@@ -58,13 +58,16 @@ public final class Constants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(2, 0, 0);
     public static final PIDConstants ROTATION_PID = new PIDConstants(2, 0, 0);
 
-    public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(1),
+    public static final Pose2d BLUE_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(2.5),
         Meter.of(4)),
         Rotation2d.fromDegrees(0));
 
-    public static final Pose2d RED_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(16),
+    public static final Pose2d RED_STARTING_POSE = new Pose2d(new Translation2d(Meter.of(16 - 2.5),
         Meter.of(4)),
         Rotation2d.fromDegrees(180));
+    // How long the shooter can have between current spikes before the shooting is
+    // registered as complete
+    public static final double MAX_SHOOTER_DOWNTIME = 1;
 
   }
 
@@ -116,13 +119,14 @@ public final class Constants {
   }
 
   // public static class ClimberConstants {
-  //   public static final double CLIMBER_SPEED = 2; // Adjust as necessary
-  //   public static final int CLIMBER_MOTOR_PORT = 31;
-  //   public static final double CLIMBER_HEIGHT_MAX = 51.5; // max height of climber
-  //   public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
-  //   public static final double CLIMBER_KP = 0.1;
-  //   public static final double CLIMBER_KI = 0.0;
-  //   public static final double CLIMBER_KD = 0.0;
+  // public static final double CLIMBER_SPEED = 2; // Adjust as necessary
+  // public static final int CLIMBER_MOTOR_PORT = 31;
+  // public static final double CLIMBER_HEIGHT_MAX = 51.5; // max height of
+  // climber
+  // public static final double CLIMBER_HEIGHT_MIN = 0.0; // min height of climber
+  // public static final double CLIMBER_KP = 0.1;
+  // public static final double CLIMBER_KI = 0.0;
+  // public static final double CLIMBER_KD = 0.0;
   // }
 
   public static class IntakeConstants {
@@ -143,8 +147,8 @@ public final class Constants {
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
     public static final double TURRET_GEAR_RATIO = 10;
-    public static final double TURRET_MAX_ANGLE = 1;
-    public static final double TURRET_MIN_ANGLE = -1;
+    public static final double TURRET_MAX_ANGLE = 45;
+    public static final double TURRET_MIN_ANGLE = -45;
   }
 
   public static class ShooterConstants {
@@ -166,6 +170,9 @@ public final class Constants {
     public static final double SHOOTER_KI = 0;
     public static final double SHOOTER_KD = 0;
     public static final double SHOOTER_KV = 0.12;
+
+    // The minimum amount of current to consider a shot has been taken, in amps
+    public static final double CURRENT_SPIKE_THRESHOLD = 10.0;
   }
 
   public static class IndexerConstants {
@@ -181,7 +188,7 @@ public final class Constants {
   public static class ElectricalConstants {
     // Note the drive and steering motor current limits can be found in the YAGSL
     // .json files in deploy
-    //public static final int CLIMBER_CURRENT_LIMIT = 80;
+    // public static final int CLIMBER_CURRENT_LIMIT = 80;
     public static final int SHOOTER_CURRENT_LIMIT = 30;
     public static final int TURRET_CURRENT_LIMIT = 10;
     public static final int INTAKE_CURRENT_LIMIT = 30;
@@ -208,7 +215,7 @@ public final class Constants {
     // The offsets for the different LED strips
     // Note: The top LED strip is counted as one and is therefore given only one
     // offset at 105
-    public static final int[] LED_STRIP_OFFSETS = new int[] {0, 105, 181};
+    public static final int[] LED_STRIP_OFFSETS = new int[] { 0, 105, 181 };
 
     private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
 

@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -31,12 +32,21 @@ public class Shooter extends SubsystemBase {
     private boolean isShooting = false;
     private boolean adaptiveMode = false;
 
+    // Timer used to measure time since last detected shot (current spike)
+    private final Timer shotTimer = new Timer();
+    // last sampled motor current (amps)
+    private double lastShooterCurrent = 0.0;
+    // threshold (amps) to consider a 'shot' current spike. Assumption: 10A is a reasonable default.
+
+
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
 
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
         init();
+        shotTimer.reset();
+        shotTimer.start();
     }
 
     private void init() {
@@ -47,6 +57,8 @@ public class Shooter extends SubsystemBase {
         shooterConfig.Slot0.kV = ShooterConstants.SHOOTER_KV;
         shooterConfig.CurrentLimits.SupplyCurrentLimit = ElectricalConstants.SHOOTER_CURRENT_LIMIT;
         shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        shooterConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
+        shooterConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
         shooterMotor.getConfigurator().apply(shooterConfig);
 
         SparkMaxConfig kickerConfig = new SparkMaxConfig();
@@ -91,6 +103,14 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         super.periodic();
         double desiredSpeed = 0.0;
+        // sample current and detect spikes indicating a shot
+        double shooterCurrent = shooterMotor.getStatorCurrent().getValueAsDouble();
+        // if we cross the threshold from below -> above, consider that a shot and reset the timer
+        if (shooterCurrent > ShooterConstants.CURRENT_SPIKE_THRESHOLD && lastShooterCurrent <= ShooterConstants.CURRENT_SPIKE_THRESHOLD) {
+            shotTimer.reset();
+            shotTimer.start();
+        }
+        lastShooterCurrent = shooterCurrent;
         if (isShooting) {
             if (adaptiveMode) {
                 double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity(), this.target);
@@ -106,6 +126,17 @@ public class Shooter extends SubsystemBase {
         } else {
             stop();
         }
-        SmartDashboard.putNumber("Shooter Commanded RPM", desiredSpeed);
+        SmartDashboard.putNumber("Shooter Desired RPM", desiredSpeed);
+        SmartDashboard.putNumber("Shooter Actual RPM", getRPM());
+        SmartDashboard.putNumber("Shooter Current (A)", shooterCurrent);
+        SmartDashboard.putNumber("Time Since Last Shot (s)", timeSinceLastShot());
+        SmartDashboard.putString("Target", target != null ? String.format("(%.2f, %.2f)", target.getX(), target.getY()) : "None");
+        SmartDashboard.putNumber("Kicker Output", kickerMotor.getAppliedOutput());
+        SmartDashboard.putNumber("Indexer Output", indexerMotor.getAppliedOutput());
+    }
+
+    public double timeSinceLastShot() {
+        // Return elapsed whole seconds since the last detected shot (current spike)
+        return shotTimer.get();
     }
 }

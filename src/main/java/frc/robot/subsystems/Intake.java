@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -64,10 +65,24 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public void deployIntake() {
+        isArmDeployed = true;
+        armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
+    }
+
+    public void retractIntake() {
+        isArmDeployed = false;
+        armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
         intakeMotor.set(0.0);
         intakeArmMotor.getClosedLoopController().setSetpoint(armDesiredPosition, ControlType.kPosition);
+        SmartDashboard.putBoolean("Intake Arm Deployed", isArmDeployed);
+        SmartDashboard.putNumber("Intake Arm Desired Position", armDesiredPosition);
+        SmartDashboard.putNumber("Intake Arm Position", intakeArmMotor.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Intake Motor Output", intakeMotor.getAppliedOutput());
     }
 }
