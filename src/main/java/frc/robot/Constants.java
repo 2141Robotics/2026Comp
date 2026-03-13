@@ -128,7 +128,7 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int INTAKE_MOTOR_PORT = 51;
     public static final int INTAKE_ARM_MOTOR_PORT = 52;
-    public static final double INTAKE_SPEED = 1.0; // Adjust as necessary
+    public static final double INTAKE_SPEED = 0.3; // Adjust as necessary
     public static final double INTAKE_ARM_KP = 0.1;
     public static final double INTAKE_ARM_KI = 0;
     public static final double INTAKE_ARM_KD = 0;
@@ -142,9 +142,9 @@ public final class Constants {
     public static final double TURRET_KP = 0;
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
-    public static final double TURRET_GEAR_RATIO = 1;
-    public static final double TURRET_MAX_ANGLE = 90;
-    public static final double TURRET_MIN_ANGLE = -90;
+    public static final double TURRET_GEAR_RATIO = 10;
+    public static final double TURRET_MAX_ANGLE = 1;
+    public static final double TURRET_MIN_ANGLE = -1;
   }
 
   public static class ShooterConstants {
