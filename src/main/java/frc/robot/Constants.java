@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.swervedrive.Vision;
 import frc.robot.util.Interpolation.InterpPoint;
 import frc.robot.util.Interpolation.InterpolationTable;
+import frc.robot.util.ProjectileSimulator;
 import swervelib.math.Matter;
 
 /**
@@ -150,7 +151,22 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_PORT = 41;
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
-    // TODO populate with real values
+    
+    public static final ProjectileSimulator.SimParameters params = new ProjectileSimulator.SimParameters(
+        0.215, // ball mass kg
+        0.1501, // ball diameter m
+        0.47, // drag coeff (smooth sphere)
+        0.2, // Magnus coeff
+        1.225, // air density
+        0.511175, // exit height (m), floor to where the ball leaves the shooter
+        0.1016, // flywheel diameter (m), measure with calipers
+        1.83, // target height (m), from game manual
+        0.6, // slip factor (0=no grip, 1=perfect), tune this on the real robot
+        65, // launch angle from horizontal, measure from CAD
+        0.001, // sim timestep
+        1500, 6000, 25, 5.0 // RPM search range, iterations, max sim time
+    );
+
     public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
         new InterpPoint(1.5, 3200),
         new InterpPoint(2.0, 3600),

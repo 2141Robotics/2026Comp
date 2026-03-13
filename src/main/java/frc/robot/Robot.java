@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.SubsystemStates;
+import frc.robot.util.ProjectileSimulator;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -56,6 +56,17 @@ public class Robot extends TimedRobot {
 
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
+    }
+
+    ProjectileSimulator sim = new ProjectileSimulator(Constants.ShooterConstants.params);
+    ProjectileSimulator.GeneratedLUT lut = sim.generateLUT();
+
+    // print it out
+    for (var entry : lut.entries()) {
+      if (entry.reachable()) {
+        System.out.printf("%.2fm -> %.0f RPM, %.3fs TOF%n",
+            entry.distanceM(), entry.rpm(), entry.tof());
+      }
     }
   }
 
@@ -101,10 +112,10 @@ public class Robot extends TimedRobot {
       disabledTimer.stop();
       disabledTimer.reset();
     }
-    if(SmartDashboard.getBoolean("Limelight 2/hasTarget", false) || 
-      SmartDashboard.getBoolean("Limelight 3/hasTarget", false)){
+    if (SmartDashboard.getBoolean("Limelight 2/hasTarget", false) ||
+        SmartDashboard.getBoolean("Limelight 3/hasTarget", false)) {
       m_robotContainer.setLEDPattern(LEDConstants.PATTERN_FIRE);
-    }else{
+    } else {
       m_robotContainer.setLEDPattern(LEDConstants.PATTERN_RED);
     }
   }
