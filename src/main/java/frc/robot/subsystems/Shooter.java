@@ -63,10 +63,12 @@ public class Shooter extends SubsystemBase {
 
         SparkMaxConfig kickerConfig = new SparkMaxConfig();
         kickerConfig.idleMode(IdleMode.kCoast);
+        kickerConfig.inverted(true);
         kickerMotor.configure(kickerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkMaxConfig indexerConfig = new SparkMaxConfig();
         indexerConfig.idleMode(IdleMode.kCoast);
+        indexerConfig.inverted(true);
         indexerMotor.configure(indexerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -123,7 +125,11 @@ public class Shooter extends SubsystemBase {
                 desiredSpeed = ShooterConstants.SHOOTER_DEFAULT_RPM;
             }
             kickerMotor.set(KickerConstants.KICKER_SPEED);
-            indexerMotor.set(IndexerConstants.INDEXER_SPEED);
+            if(indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT) {
+                indexerMotor.set(-IndexerConstants.INDEXER_SPEED); // If the indexer current is above the jiggle threshold, reverse the indexer to try to free the stuck ball
+            }else{
+                indexerMotor.set(IndexerConstants.INDEXER_SPEED);
+            }
         } else {
             stop();
         }
@@ -134,6 +140,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putString("Target", target != null ? String.format("(%.2f, %.2f)", target.getX(), target.getY()) : "None");
         SmartDashboard.putNumber("Kicker Output", kickerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Output", indexerMotor.getAppliedOutput());
+        SmartDashboard.putNumber("Indexer Current (A)", indexerMotor.getOutputCurrent());
     }
 
     private void resetShotTimer() {

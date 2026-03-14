@@ -326,16 +326,16 @@ public class Vision {
      * Center Camera
      */
     LIMELIGHT2("Limelight 2",
-        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(41.7), 0),
-        new Translation3d(Units.inchesToMeters(13.75),
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(8)),
+        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(-20), Units.degreesToRadians(230)),
+        new Translation3d(Units.inchesToMeters(10.786),
+            Units.inchesToMeters(-11.441),
+            Units.inchesToMeters(11.382)),
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     LIMELIGHT3("Limelight 3",
-        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(41.7), 0),
-        new Translation3d(Units.inchesToMeters(13.75),
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(8)),
+        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-30), 0),
+        new Translation3d(Units.inchesToMeters(12.278),
+            Units.inchesToMeters(7.696),
+            Units.inchesToMeters(13.11025)),
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
     /**

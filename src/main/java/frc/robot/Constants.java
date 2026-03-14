@@ -147,8 +147,8 @@ public final class Constants {
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
     public static final double TURRET_GEAR_RATIO = 10;
-    public static final double TURRET_MAX_ANGLE = 45;
-    public static final double TURRET_MIN_ANGLE = -45;
+    public static final double TURRET_MAX_ANGLE = 0;
+    public static final double TURRET_MIN_ANGLE = -0;
   }
 
   public static class ShooterConstants {
@@ -156,10 +156,10 @@ public final class Constants {
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
     // TODO populate with real values
     public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
-        new InterpPoint(1.5, 3200),
-        new InterpPoint(2.0, 3600),
-        new InterpPoint(2.5, 4100),
-        new InterpPoint(3.0, 4700)));
+        new InterpPoint(1.5, 600),
+        new InterpPoint(2.0, 700),
+        new InterpPoint(2.5, 800),
+        new InterpPoint(3.0, 900)));
     // How far the shooter is offset from the robot center, in meters
     public static final Translation2d SHOOTER_OFFSET = new Translation2d(5.587 * 0.0254, 5 * 0.0254);
     // Diameter of the shooter wheel in meters
@@ -176,13 +176,13 @@ public final class Constants {
   }
 
   public static class IndexerConstants {
-    public static final int INDEXER_MOTOR_PORT = 43;
-    public static final double INDEXER_SPEED = 0.02;
+    public static final int INDEXER_MOTOR_PORT = 42;
+    public static final double INDEXER_SPEED = 0.017;
   }
 
   public static class KickerConstants {
-    public static final int KICKER_MOTOR_PORT = 42;
-    public static final double KICKER_SPEED = 0.3;
+    public static final int KICKER_MOTOR_PORT = 43;
+    public static final double KICKER_SPEED = 0.35;
   }
 
   public static class ElectricalConstants {
@@ -193,8 +193,9 @@ public final class Constants {
     public static final int TURRET_CURRENT_LIMIT = 10;
     public static final int INTAKE_CURRENT_LIMIT = 30;
     public static final int INTAKE_ARM_CURRENT_LIMIT = 20;
-    public static final int KICKER_CURRENT_LIMIT = 10;
-    public static final int INDEXER_CURRENT_LIMIT = 20;
+    public static final int KICKER_CURRENT_LIMIT = 20;
+    public static final int INDEXER_CURRENT_LIMIT = 60;
+    public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free
   }
 
   public static class LEDConstants {
