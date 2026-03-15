@@ -130,25 +130,26 @@ public final class Constants {
   // }
 
   public static class IntakeConstants {
-    public static final int INTAKE_MOTOR_PORT = 51;
-    public static final int INTAKE_ARM_MOTOR_PORT = 52;
-    public static final double INTAKE_SPEED = 0.3; // Adjust as necessary
+    public static final int INTAKE_MOTOR_PORT = 52;
+    public static final int INTAKE_ARM_MOTOR_PORT = 51;
+    public static final double INTAKE_ARM_MANUAL_SPEED = 3;
+    public static final double INTAKE_RUN_SPEED = 0.3; // Adjust as necessary
     public static final double INTAKE_ARM_KP = 0.1;
     public static final double INTAKE_ARM_KI = 0;
     public static final double INTAKE_ARM_KD = 0;
-    public static final double INTAKE_ARM_MAX_POSITION = 10.0;
-    public static final double INTAKE_ARM_MIN_POSITION = 0;
+    public static final double INTAKE_ARM_MAX_POSITION = 0;
+    public static final double INTAKE_ARM_MIN_POSITION = 67;
   }
 
   public static class TurretConstants {
     public static final int TURRET_MOTOR_PORT = 44;
-    public static final double TURRET_SPEED = 5.0; // Adjust as necessary
-    public static final double TURRET_KP = 0;
+    public static final double TURRET_SPEED = 3.0; // Adjust as necessary
+    public static final double TURRET_KP = 0.01;
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
     public static final double TURRET_GEAR_RATIO = 10;
-    public static final double TURRET_MAX_ANGLE = 0;
-    public static final double TURRET_MIN_ANGLE = -0;
+    public static final double TURRET_MAX_ANGLE = 90;
+    public static final double TURRET_MIN_ANGLE = -60;
   }
 
   public static class ShooterConstants {
@@ -156,10 +157,22 @@ public final class Constants {
     public static final double SHOOTER_DEFAULT_RPM = 3000.0;
     // TODO populate with real values
     public static final InterpolationTable shooterTable = new InterpolationTable(List.of(
-        new InterpPoint(1.5, 600),
-        new InterpPoint(2.0, 700),
-        new InterpPoint(2.5, 800),
-        new InterpPoint(3.0, 900)));
+        // new InterpPoint(1.75, 3000),
+        // new InterpPoint(2.0, 2500),
+        // new InterpPoint(2.5, 3000),
+        // new InterpPoint(3.0, 3000),
+        // new InterpPoint(3.5, 3000),
+        // new InterpPoint(4.0, 3000),
+        // new InterpPoint(4.5, 3000),
+        // new InterpPoint(5.0, 3500)));
+        new InterpPoint(1.75, 600),
+        new InterpPoint(2.0, 600),
+        new InterpPoint(2.5, 600),
+        new InterpPoint(3.0, 600),
+        new InterpPoint(3.5, 600),
+        new InterpPoint(4.0, 600),
+        new InterpPoint(4.5, 600),
+        new InterpPoint(5.0, 650)));
     // How far the shooter is offset from the robot center, in meters
     public static final Translation2d SHOOTER_OFFSET = new Translation2d(5.587 * 0.0254, 5 * 0.0254);
     // Diameter of the shooter wheel in meters
@@ -173,6 +186,7 @@ public final class Constants {
 
     // The minimum amount of current to consider a shot has been taken, in amps
     public static final double CURRENT_SPIKE_THRESHOLD = 10.0;
+    public static final int nudgeAmount = 25;
   }
 
   public static class IndexerConstants {
@@ -190,9 +204,9 @@ public final class Constants {
     // .json files in deploy
     // public static final int CLIMBER_CURRENT_LIMIT = 80;
     public static final int SHOOTER_CURRENT_LIMIT = 30;
-    public static final int TURRET_CURRENT_LIMIT = 10;
+    public static final int TURRET_CURRENT_LIMIT = 20;
     public static final int INTAKE_CURRENT_LIMIT = 30;
-    public static final int INTAKE_ARM_CURRENT_LIMIT = 20;
+    public static final int INTAKE_ARM_CURRENT_LIMIT = 8;
     public static final int KICKER_CURRENT_LIMIT = 20;
     public static final int INDEXER_CURRENT_LIMIT = 60;
     public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free

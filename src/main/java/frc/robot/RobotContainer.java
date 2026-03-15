@@ -266,12 +266,15 @@ public class RobotContainer {
       operatorXbox.rightBumper().onTrue(
           Commands.runOnce(() -> turret.setTarget(FieldMeasurements.getHubPosition()), turret));
 
-      operatorXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      operatorXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      // operatorXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
+      // operatorXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
 
       operatorXbox.b().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
       operatorXbox.a().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
-      
+      operatorXbox.povUp().whileTrue(Commands.runOnce(intake::moveIn, intake).repeatedly());
+      operatorXbox.povDown().whileTrue(Commands.runOnce(intake::moveOut, intake).repeatedly());
+      operatorXbox.povLeft().onTrue(Commands.runOnce(shooter::nudgeWeaker, shooter));
+      operatorXbox.povRight().onTrue(Commands.runOnce(shooter::nudgeStronger, shooter));
       //TODO Make kick and indexer controls and bind them to the operator controller
       //operatorXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
     }

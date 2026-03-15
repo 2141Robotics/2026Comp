@@ -31,17 +31,18 @@ public class Intake extends SubsystemBase {
         intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkMaxConfig armConfig = new SparkMaxConfig();
-        armConfig.idleMode(IdleMode.kBrake);
+        armConfig.idleMode(IdleMode.kCoast);
         armConfig.smartCurrentLimit(ElectricalConstants.INTAKE_ARM_CURRENT_LIMIT);
         armConfig.closedLoop
             .p(IntakeConstants.INTAKE_ARM_KP)
             .i(IntakeConstants.INTAKE_ARM_KI)
             .d(IntakeConstants.INTAKE_ARM_KD);
+        armConfig.inverted(true);
         intakeArmMotor.configure(armConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void runIntake() {
-        intakeMotor.set(IntakeConstants.INTAKE_SPEED);
+        intakeMotor.set(IntakeConstants.INTAKE_RUN_SPEED);
     }
 
     public void toggleDeployment() {
@@ -52,15 +53,15 @@ public class Intake extends SubsystemBase {
     }
 
     public void moveOut() {
-        armDesiredPosition -= IntakeConstants.INTAKE_SPEED;
-        if (armDesiredPosition < IntakeConstants.INTAKE_ARM_MIN_POSITION) {
+        armDesiredPosition += IntakeConstants.INTAKE_ARM_MANUAL_SPEED;
+        if (armDesiredPosition > IntakeConstants.INTAKE_ARM_MIN_POSITION) {
             armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
         }
     }
 
     public void moveIn() {
-        armDesiredPosition += IntakeConstants.INTAKE_SPEED;
-        if (armDesiredPosition > IntakeConstants.INTAKE_ARM_MAX_POSITION) {
+        armDesiredPosition -= IntakeConstants.INTAKE_ARM_MANUAL_SPEED;
+        if (armDesiredPosition < IntakeConstants.INTAKE_ARM_MAX_POSITION) {
             armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
         }
     }

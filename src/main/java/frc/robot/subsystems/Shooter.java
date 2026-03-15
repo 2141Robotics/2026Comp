@@ -42,6 +42,8 @@ public class Shooter extends SubsystemBase {
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
 
+    private int nudgeOffset;
+
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
         init();
@@ -73,7 +75,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterRPM(double rpm) {
-        double rps = rpm / 60.0;
+        double rps = (nudgeOffset+rpm) / 60.0;
         shooterMotor.setControl(velocityControl.withVelocity(rps).withEnableFOC(true));
     }
 
@@ -84,7 +86,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getRPM() {
-        return shooterMotor.getVelocity().getValue().baseUnitMagnitude() * 60.0;
+        return shooterMotor.getVelocity().getValue().baseUnitMagnitude() * 10;
     }
 
     public void toggleShooting() {
@@ -133,7 +135,7 @@ public class Shooter extends SubsystemBase {
         } else {
             stop();
         }
-        SmartDashboard.putNumber("Shooter Desired RPM", desiredSpeed);
+        SmartDashboard.putNumber("Shooter Desired RPM", desiredSpeed + nudgeOffset);
         SmartDashboard.putNumber("Shooter Actual RPM", getRPM());
         SmartDashboard.putNumber("Shooter Current (A)", shooterCurrent);
         SmartDashboard.putNumber("Time Since Last Shot (s)", timeSinceLastShot());
@@ -151,5 +153,13 @@ public class Shooter extends SubsystemBase {
     public double timeSinceLastShot() {
         // Return elapsed whole seconds since the last detected shot (current spike)
         return shotTimer.get();
+    }
+
+    public void nudgeWeaker(){
+        nudgeOffset -= ShooterConstants.nudgeAmount;
+    }
+
+    public void nudgeStronger(){
+        nudgeOffset += ShooterConstants.nudgeAmount;
     }
 }
