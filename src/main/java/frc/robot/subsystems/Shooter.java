@@ -5,14 +5,17 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElectricalConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -29,15 +32,14 @@ public class Shooter extends SubsystemBase {
 
     private final VelocityVoltage velocityControl = new VelocityVoltage(0);
 
+    // Indexer closed-loop controller
+    private final SparkClosedLoopController indexerController;
+
     private boolean isShooting = false;
     private boolean adaptiveMode = false;
 
-    // Timer used to measure time since last detected shot (current spike)
     private final Timer shotTimer = new Timer();
-    // last sampled motor current (amps)
     private double lastShooterCurrent = 0.0;
-    // threshold (amps) to consider a 'shot' current spike. Assumption: 10A is a reasonable default.
-
 
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
@@ -46,6 +48,7 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
+        indexerController = indexerMotor.getClosedLoopController();
         init();
         shotTimer.reset();
         shotTimer.start();
@@ -68,14 +71,33 @@ public class Shooter extends SubsystemBase {
         kickerConfig.inverted(true);
         kickerMotor.configure(kickerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+        // ── Indexer config (closed-loop velocity, 2026 API) ──────────────────
         SparkMaxConfig indexerConfig = new SparkMaxConfig();
-        indexerConfig.idleMode(IdleMode.kCoast);
-        indexerConfig.inverted(true);
+        indexerConfig
+            .idleMode(IdleMode.kCoast)
+            .inverted(true)
+            .smartCurrentLimit(ElectricalConstants.INDEXER_CURRENT_LIMIT)
+            .secondaryCurrentLimit(ElectricalConstants.INDEXER_CURRENT_LIMIT + 20);
+
+        // FeedForwardConfig.kV replaces the deprecated velocityFF()
+        // kV = 1 / NEO_VORTEX_FREE_SPEED_RPM = 1/6784 ≈ 0.000147
+        FeedForwardConfig indexerFF = new FeedForwardConfig()
+            .kV(IndexerConstants.INDEXER_KV);
+
+        indexerConfig.closedLoop
+            .pid(IndexerConstants.INDEXER_KP,
+                 IndexerConstants.INDEXER_KI,
+                 IndexerConstants.INDEXER_KD)
+            .iZone(IndexerConstants.INDEXER_IZONE)
+            .outputRange(-1.0, 1.0)
+            .apply(indexerFF);  // attach feedforward
+
         indexerMotor.configure(indexerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // ─────────────────────────────────────────────────────────────────────
     }
 
     public void setShooterRPM(double rpm) {
-        double rps = (nudgeOffset+rpm) / 60.0;
+        double rps = (nudgeOffset + rpm) / 60.0;
         shooterMotor.setControl(velocityControl.withVelocity(rps).withEnableFOC(true));
     }
 
@@ -109,13 +131,12 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         super.periodic();
         double desiredSpeed = 0.0;
-        // sample current and detect spikes indicating a shot
         double shooterCurrent = shooterMotor.getStatorCurrent().getValueAsDouble();
-        // if we cross the threshold from below -> above, consider that a shot and reset the timer
         if (shooterCurrent > ShooterConstants.CURRENT_SPIKE_THRESHOLD && lastShooterCurrent <= ShooterConstants.CURRENT_SPIKE_THRESHOLD) {
             resetShotTimer();
         }
         lastShooterCurrent = shooterCurrent;
+
         if (isShooting) {
             if (adaptiveMode) {
                 double adaptiveRPM = ShooterMath.calculateAdaptiveShooterRPM(drivebase.getPose(), drivebase.getRobotVelocity(), this.target);
@@ -126,15 +147,22 @@ public class Shooter extends SubsystemBase {
                 setShooterRPM(ShooterConstants.SHOOTER_DEFAULT_RPM);
                 desiredSpeed = ShooterConstants.SHOOTER_DEFAULT_RPM;
             }
+
             kickerMotor.set(KickerConstants.KICKER_SPEED);
-            if(indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT) {
-                indexerMotor.set(-IndexerConstants.INDEXER_SPEED); // If the indexer current is above the jiggle threshold, reverse the indexer to try to free the stuck ball
-            }else{
-                indexerMotor.set(IndexerConstants.INDEXER_SPEED);
+
+            // ── Indexer: closed-loop velocity with jiggle on jam ─────────────
+            if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT) {
+                // Reverse at the same RPM magnitude to free a stuck game piece
+                indexerController.setSetpoint(-IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
+            } else {
+                indexerController.setSetpoint(IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
             }
+            // ─────────────────────────────────────────────────────────────────
+
         } else {
             stop();
         }
+
         SmartDashboard.putNumber("Shooter Desired RPM", desiredSpeed + nudgeOffset);
         SmartDashboard.putNumber("Shooter Actual RPM", getRPM());
         SmartDashboard.putNumber("Shooter Current (A)", shooterCurrent);
@@ -143,6 +171,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Kicker Output", kickerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Output", indexerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Current (A)", indexerMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Indexer Actual RPM", indexerMotor.getEncoder().getVelocity());
     }
 
     private void resetShotTimer() {
@@ -151,15 +180,14 @@ public class Shooter extends SubsystemBase {
     }
 
     public double timeSinceLastShot() {
-        // Return elapsed whole seconds since the last detected shot (current spike)
         return shotTimer.get();
     }
 
-    public void nudgeWeaker(){
+    public void nudgeWeaker() {
         nudgeOffset -= ShooterConstants.nudgeAmount;
     }
 
-    public void nudgeStronger(){
+    public void nudgeStronger() {
         nudgeOffset += ShooterConstants.nudgeAmount;
     }
 }

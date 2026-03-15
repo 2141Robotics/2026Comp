@@ -196,6 +196,7 @@ public final class Constants {
     public static final double INDEXER_KD = 0;
     public static final double INDEXER_KV = 0.000185;
     public static final double INDEXER_IZONE = 200;
+    public static final double INDEXER_TARGET_RPM = 60; // Adjust as necessary
   }
 
   public static class KickerConstants {
