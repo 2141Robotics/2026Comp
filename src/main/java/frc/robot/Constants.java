@@ -191,7 +191,11 @@ public final class Constants {
 
   public static class IndexerConstants {
     public static final int INDEXER_MOTOR_PORT = 42;
-    public static final double INDEXER_SPEED = 0.017;
+    public static final double INDEXER_KP = 0.0001;
+    public static final double INDEXER_KI = 0.000001;
+    public static final double INDEXER_KD = 0;
+    public static final double INDEXER_KV = 0.000185;
+    public static final double INDEXER_IZONE = 200;
   }
 
   public static class KickerConstants {
