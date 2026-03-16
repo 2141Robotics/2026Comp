@@ -326,7 +326,7 @@ public class Vision {
      * Center Camera
      */
     LIMELIGHT2("Limelight 2",
-        new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(-20), Units.degreesToRadians(230)),
+        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(230)),
         new Translation3d(Units.inchesToMeters(10.786),
             Units.inchesToMeters(-11.441),
             Units.inchesToMeters(11.382)),

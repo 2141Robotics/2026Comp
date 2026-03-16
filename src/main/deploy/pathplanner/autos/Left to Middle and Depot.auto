@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shootTillEmpty"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Left To Depot"

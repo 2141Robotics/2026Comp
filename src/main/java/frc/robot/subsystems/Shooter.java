@@ -43,6 +43,7 @@ public class Shooter extends SubsystemBase {
 
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
+    private int jigglingTimer = 0; // Timer for indexer jiggle state
 
     private int nudgeOffset;
 
@@ -151,10 +152,15 @@ public class Shooter extends SubsystemBase {
             kickerMotor.set(KickerConstants.KICKER_SPEED);
 
             // ── Indexer: closed-loop velocity with jiggle on jam ─────────────
-            if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT) {
-                // Reverse at the same RPM magnitude to free a stuck game piece
-                indexerController.setSetpoint(-IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
+            if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
+                jigglingTimer = 40;
+            }
+            if (jigglingTimer > 0) {
+                jigglingTimer--;
+                System.out.println("Indexer Jiggle Detected");
+                indexerController.setSetpoint(-0.04, SparkBase.ControlType.kDutyCycle); // Reverse at 4% power
             } else {
+                System.out.println("Indexer Running Normally");
                 indexerController.setSetpoint(IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
             }
             // ─────────────────────────────────────────────────────────────────

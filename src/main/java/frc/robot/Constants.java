@@ -114,7 +114,7 @@ public final class Constants {
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
      */
-    public static final double MAX_AMBIGUITY = 0.2;
+    public static final double MAX_AMBIGUITY = 0.1;
 
   }
 
@@ -148,8 +148,8 @@ public final class Constants {
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
     public static final double TURRET_GEAR_RATIO = 10;
-    public static final double TURRET_MAX_ANGLE = 90;
-    public static final double TURRET_MIN_ANGLE = -60;
+    public static final double TURRET_MAX_ANGLE = 1;
+    public static final double TURRET_MIN_ANGLE = -1;
   }
 
   public static class ShooterConstants {
@@ -165,14 +165,7 @@ public final class Constants {
         // new InterpPoint(4.0, 3000),
         // new InterpPoint(4.5, 3000),
         // new InterpPoint(5.0, 3500)));
-        new InterpPoint(1.75, 600),
-        new InterpPoint(2.0, 600),
-        new InterpPoint(2.5, 600),
-        new InterpPoint(3.0, 600),
-        new InterpPoint(3.5, 600),
-        new InterpPoint(4.0, 600),
-        new InterpPoint(4.5, 600),
-        new InterpPoint(5.0, 650)));
+        new InterpPoint(1.75, 6000)));
     // How far the shooter is offset from the robot center, in meters
     public static final Translation2d SHOOTER_OFFSET = new Translation2d(5.587 * 0.0254, 5 * 0.0254);
     // Diameter of the shooter wheel in meters
@@ -213,7 +206,7 @@ public final class Constants {
     public static final int INTAKE_CURRENT_LIMIT = 30;
     public static final int INTAKE_ARM_CURRENT_LIMIT = 8;
     public static final int KICKER_CURRENT_LIMIT = 20;
-    public static final int INDEXER_CURRENT_LIMIT = 60;
+    public static final int INDEXER_CURRENT_LIMIT = 80;
     public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free
   }
 
