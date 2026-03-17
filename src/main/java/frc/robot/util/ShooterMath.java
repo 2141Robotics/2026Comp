@@ -32,9 +32,6 @@ public class ShooterMath {
         return initialVelocity.minus(robotVelocity);
     }
 private static double calculateDistanceToTarget(Pose2d robotPose, Translation2d target) {
-    SmartDashboard.putNumberArray("Target", new double[]{
-        target.getX(), target.getY(), 0.0
-    });
     return robotPose.getTranslation().getDistance(target);
 }
     /**

@@ -172,8 +172,12 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Desired RPM", desiredSpeed + nudgeOffset);
         SmartDashboard.putNumber("Shooter Actual RPM", getRPM());
         SmartDashboard.putNumber("Shooter Current (A)", shooterCurrent);
-        SmartDashboard.putNumber("Time Since Last Shot (s)", timeSinceLastShot());
-        SmartDashboard.putString("Target", target != null ? String.format("(%.2f, %.2f)", target.getX(), target.getY()) : "None");
+        SmartDashboard.putNumber("Time Since Last Shot (s)", timeSinceLastShot()); 
+        if(target != null) {
+            SmartDashboard.putNumberArray("Target", new double[]{
+                target.getX(), target.getY(), 0.0
+            });
+        }
         SmartDashboard.putNumber("Kicker Output", kickerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Output", indexerMotor.getAppliedOutput());
         SmartDashboard.putNumber("Indexer Current (A)", indexerMotor.getOutputCurrent());
