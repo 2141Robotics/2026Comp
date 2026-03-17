@@ -31,11 +31,12 @@ public class ShooterMath {
                 robotRelativeVelocity.vyMetersPerSecond).rotateBy(robotPose.getRotation());
         return initialVelocity.minus(robotVelocity);
     }
-
-    private static double calculateDistanceToTarget(Pose2d robotPose, Translation2d target) {
-        return robotPose.getTranslation().getDistance(target);
-    }
-
+private static double calculateDistanceToTarget(Pose2d robotPose, Translation2d target) {
+    SmartDashboard.putNumberArray("Target", new double[]{
+        target.getX(), target.getY(), 0.0
+    });
+    return robotPose.getTranslation().getDistance(target);
+}
     /**
      * 
      * @param robotPose
