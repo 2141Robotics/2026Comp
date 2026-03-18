@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +32,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+  private PowerDistribution pd;
 
   public Robot() {
     instance = this;
@@ -58,6 +61,7 @@ public class Robot extends TimedRobot {
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+    pd = new PowerDistribution();
   }
 
   /**
@@ -85,6 +89,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Time Remaining", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Time Left in Shift", MatchData.getShiftTime());
     SmartDashboard.putBoolean("Alliance Hub Active", MatchData.isHubActive());
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("Total Current", pd.getTotalCurrent());
 
     CommandScheduler.getInstance().run();
   }
