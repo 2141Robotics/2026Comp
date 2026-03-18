@@ -114,11 +114,7 @@ public final class Constants {
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
      */
-<<<<<<< Updated upstream
-    public static final double MAX_AMBIGUITY = 0.1;
-=======
     public static final double MAX_AMBIGUITY = 0.07;
->>>>>>> Stashed changes
 
   }
 
@@ -210,7 +206,7 @@ public final class Constants {
     public static final int INTAKE_CURRENT_LIMIT = 30;
     public static final int INTAKE_ARM_CURRENT_LIMIT = 8;
     public static final int KICKER_CURRENT_LIMIT = 20;
-    public static final int INDEXER_CURRENT_LIMIT = 80;
+    public static final int INDEXER_CURRENT_LIMIT = 40;
     public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free
   }
 

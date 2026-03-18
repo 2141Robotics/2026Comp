@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
     private final VelocityVoltage velocityControl = new VelocityVoltage(0);
 
     // Indexer closed-loop controller
-    private final SparkClosedLoopController indexerController;
+    // private final SparkClosedLoopController indexerController;
 
     private boolean isShooting = false;
     private boolean adaptiveMode = false;
@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
-        indexerController = indexerMotor.getClosedLoopController();
+        // indexerController = indexerMotor.getClosedLoopController();
         init();
         shotTimer.reset();
         shotTimer.start();
@@ -150,6 +150,7 @@ public class Shooter extends SubsystemBase {
             }
 
             kickerMotor.set(KickerConstants.KICKER_SPEED);
+            indexerMotor.set(0.6);
 
             // ── Indexer: closed-loop velocity with jiggle on jam ─────────────
             // if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
@@ -160,7 +161,6 @@ public class Shooter extends SubsystemBase {
             //     System.out.println("Indexer Jiggle Detected");
             //     indexerMotor.set(-0.3);
             // } else {
-                indexerMotor.set(0.6);
             // }
             // ─────────────────────────────────────────────────────────────────
 
