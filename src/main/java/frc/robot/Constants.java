@@ -114,7 +114,11 @@ public final class Constants {
      * Ambiguity defined as a value between (0,1). Used in
      * {@link Vision#filterPose}.
      */
+<<<<<<< Updated upstream
     public static final double MAX_AMBIGUITY = 0.1;
+=======
+    public static final double MAX_AMBIGUITY = 0.07;
+>>>>>>> Stashed changes
 
   }
 
