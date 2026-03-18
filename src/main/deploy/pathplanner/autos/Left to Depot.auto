@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Leave Right"
+            "pathName": "Start to Shoot Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootTillEmpty"
           }
         },
         {
@@ -17,13 +23,25 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
+          "data": {
+            "pathName": "Left To Depot"
+          }
+        },
+        {
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Right Half Collect"
+                  "pathName": "Collect Depot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootForever"
                 }
               },
               {
@@ -34,29 +52,11 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bump Return Right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootTillEmpty"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right to Outpost"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right",
+  "folder": "Left",
   "choreoAuto": false
 }

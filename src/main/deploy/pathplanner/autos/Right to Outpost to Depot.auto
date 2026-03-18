@@ -29,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "deployIntake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -42,6 +48,12 @@
                 "type": "named",
                 "data": {
                   "name": "shootForever"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
                 }
               }
             ]

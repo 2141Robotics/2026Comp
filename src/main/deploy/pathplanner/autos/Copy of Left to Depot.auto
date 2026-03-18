@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Leave Left"
+            "pathName": "Start to Shoot Left"
           }
         },
         {
@@ -17,40 +17,27 @@
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Half Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              }
-            ]
+            "pathName": "Left to Outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Return Left"
+            "pathName": "Outpost to Depot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "shootTillEmpty"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left To Depot"
           }
         },
         {
