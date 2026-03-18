@@ -165,7 +165,7 @@ public final class Constants {
         // new InterpPoint(4.0, 3000),
         // new InterpPoint(4.5, 3000),
         // new InterpPoint(5.0, 3500)));
-        new InterpPoint(1.75, 6000)));
+        new InterpPoint(1.75, 600)));
     // How far the shooter is offset from the robot center, in meters
     public static final Translation2d SHOOTER_OFFSET = new Translation2d(5.587 * 0.0254, 5 * 0.0254);
     // Diameter of the shooter wheel in meters
@@ -183,7 +183,7 @@ public final class Constants {
   }
 
   public static class IndexerConstants {
-    public static final int INDEXER_MOTOR_PORT = 42;
+    public static final int INDEXER_MOTOR_PORT = 45;
     public static final double INDEXER_KP = 0.0001;
     public static final double INDEXER_KI = 0.000001;
     public static final double INDEXER_KD = 0;

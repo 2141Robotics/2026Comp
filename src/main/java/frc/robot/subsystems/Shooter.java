@@ -152,17 +152,16 @@ public class Shooter extends SubsystemBase {
             kickerMotor.set(KickerConstants.KICKER_SPEED);
 
             // ── Indexer: closed-loop velocity with jiggle on jam ─────────────
-            if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
-                jigglingTimer = 40;
-            }
-            if (jigglingTimer > 0) {
-                jigglingTimer--;
-                System.out.println("Indexer Jiggle Detected");
-                indexerController.setSetpoint(-0.04, SparkBase.ControlType.kDutyCycle); // Reverse at 4% power
-            } else {
-                System.out.println("Indexer Running Normally");
-                indexerController.setSetpoint(IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
-            }
+            // if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
+            //     jigglingTimer = 40;
+            // }
+            // if (jigglingTimer > 0) {
+            //     jigglingTimer--;
+            //     System.out.println("Indexer Jiggle Detected");
+            //     indexerMotor.set(-0.3);
+            // } else {
+                indexerMotor.set(0.6);
+            // }
             // ─────────────────────────────────────────────────────────────────
 
         } else {
