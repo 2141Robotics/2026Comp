@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
     private final VelocityVoltage velocityControl = new VelocityVoltage(0);
 
     // Indexer closed-loop controller
-    private final SparkClosedLoopController indexerController;
+    // private final SparkClosedLoopController indexerController;
 
     private boolean isShooting = false;
     private boolean adaptiveMode = false;
@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(SwerveSubsystem d) {
         this.drivebase = d;
-        indexerController = indexerMotor.getClosedLoopController();
+        // indexerController = indexerMotor.getClosedLoopController();
         init();
         shotTimer.reset();
         shotTimer.start();
@@ -150,19 +150,18 @@ public class Shooter extends SubsystemBase {
             }
 
             kickerMotor.set(KickerConstants.KICKER_SPEED);
+            indexerMotor.set(0.6);
 
             // ── Indexer: closed-loop velocity with jiggle on jam ─────────────
-            if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
-                jigglingTimer = 40;
-            }
-            if (jigglingTimer > 0) {
-                jigglingTimer--;
-                System.out.println("Indexer Jiggle Detected");
-                indexerController.setSetpoint(-0.04, SparkBase.ControlType.kDutyCycle); // Reverse at 4% power
-            } else {
-                System.out.println("Indexer Running Normally");
-                indexerController.setSetpoint(IndexerConstants.INDEXER_TARGET_RPM, SparkBase.ControlType.kVelocity);
-            }
+            // if (indexerMotor.getOutputCurrent() > ElectricalConstants.INDEXER_CURRENT_JIGGLE_LIMIT && jigglingTimer == 0) {
+            //     jigglingTimer = 40;
+            // }
+            // if (jigglingTimer > 0) {
+            //     jigglingTimer--;
+            //     System.out.println("Indexer Jiggle Detected");
+            //     indexerMotor.set(-0.3);
+            // } else {
+            // }
             // ─────────────────────────────────────────────────────────────────
 
         } else {
