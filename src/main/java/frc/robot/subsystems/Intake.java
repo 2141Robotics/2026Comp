@@ -86,4 +86,8 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake Arm Position", intakeArmMotor.getAbsoluteEncoder().getPosition());
         SmartDashboard.putNumber("Intake Motor Output", intakeMotor.getAppliedOutput());
     }
+
+    public void setAngle(double d) {
+        armDesiredPosition = d;
+    }
 }

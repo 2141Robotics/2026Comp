@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Leave Right"
+            "pathName": "Start to Shoot Right"
           }
         },
         {
@@ -17,34 +17,21 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Half Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              }
-            ]
+            "pathName": "Right to Outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Return Right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootForever"
+            "pathName": "Outpost to Shoot"
           }
         },
         {
@@ -54,13 +41,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootForever"
+                  "name": "wiggleIntake"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "wiggleIntake"
+                  "name": "shootForever"
                 }
               }
             ]

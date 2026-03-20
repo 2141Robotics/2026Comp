@@ -28,6 +28,7 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.auto.ShootAtHubCommand;
+import frc.robot.commands.auto.WiggleIntakeCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
@@ -157,6 +158,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("deployIntake", Commands.runOnce(() -> intake.deployIntake(), intake));
     NamedCommands.registerCommand("retractIntake", Commands.runOnce(() -> intake.retractIntake(), intake));
     NamedCommands.registerCommand("runIntake", Commands.runOnce(() -> intake.runIntake(), intake));
+    NamedCommands.registerCommand("wiggleIntake", new WiggleIntakeCommand(intake));
   }
 
   private void initAutomonousChooser() {
@@ -275,10 +277,7 @@ public class RobotContainer {
       operatorXbox.povDown().whileTrue(Commands.runOnce(intake::moveOut, intake).repeatedly());
       operatorXbox.povLeft().onTrue(Commands.runOnce(shooter::nudgeWeaker, shooter));
       operatorXbox.povRight().onTrue(Commands.runOnce(shooter::nudgeStronger, shooter));
-      //TODO Make kick and indexer controls and bind them to the operator controller
-      //operatorXbox.rightBumper().whileTrue(Commands.runOnce(indexer::runIndexer, indexer).repeatedly());
     }
-
   }
 
   /**
@@ -306,5 +305,9 @@ public class RobotContainer {
   public void setTarget(Translation2d target) {
     turret.setTarget(target);
     shooter.setTarget(target);
+  }
+
+  public void stopShooting() {
+    shooter.stop();
   }
 }

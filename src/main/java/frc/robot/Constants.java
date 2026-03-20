@@ -148,8 +148,8 @@ public final class Constants {
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
     public static final double TURRET_GEAR_RATIO = 10;
-    public static final double TURRET_MAX_ANGLE = 1;
-    public static final double TURRET_MIN_ANGLE = -1;
+    public static final double TURRET_MAX_ANGLE = 90;
+    public static final double TURRET_MIN_ANGLE = -90;
   }
 
   public static class ShooterConstants {
@@ -179,7 +179,7 @@ public final class Constants {
 
     // The minimum amount of current to consider a shot has been taken, in amps
     public static final double CURRENT_SPIKE_THRESHOLD = 10.0;
-    public static final int nudgeAmount = 25;
+    public static final int nudgeAmount = 50;
   }
 
   public static class IndexerConstants {
@@ -204,8 +204,8 @@ public final class Constants {
     public static final int SHOOTER_CURRENT_LIMIT = 30;
     public static final int TURRET_CURRENT_LIMIT = 20;
     public static final int INTAKE_CURRENT_LIMIT = 30;
-    public static final int INTAKE_ARM_CURRENT_LIMIT = 8;
-    public static final int KICKER_CURRENT_LIMIT = 20;
+    public static final int INTAKE_ARM_CURRENT_LIMIT = 13;
+    public static final int KICKER_CURRENT_LIMIT = 40;
     public static final int INDEXER_CURRENT_LIMIT = 40;
     public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free
   }

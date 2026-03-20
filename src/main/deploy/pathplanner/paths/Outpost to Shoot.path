@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5,
-        "y": 5.95
+        "x": 0.669,
+        "y": 0.6486677631634483
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1133305921052625,
-        "y": 5.929555921052631
+        "x": 1.2117069541638128,
+        "y": 1.005845822242084
       },
       "isLocked": false,
-      "linkedName": "Depot"
+      "linkedName": "Outpost"
     },
     {
       "anchor": {
-        "x": 0.6246463815789467,
-        "y": 5.95
+        "x": 3.0,
+        "y": 2.5
       },
       "prevControl": {
-        "x": 0.9975904605263151,
-        "y": 5.929555921052631
+        "x": 2.237441915045043,
+        "y": 1.7793599402055884
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Colleted"
+      "linkedName": "Shoot Right"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.4,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 45.0
   },
   "reversed": false,
-  "folder": "Depot",
+  "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -13,12 +13,6 @@
         {
           "type": "named",
           "data": {
-            "name": "shootTillEmpty"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "deployIntake"
           }
         },
@@ -41,13 +35,32 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "runIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot to Left Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
                   "name": "shootForever"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "runIntake"
+                  "name": "wiggleIntake"
                 }
               }
             ]

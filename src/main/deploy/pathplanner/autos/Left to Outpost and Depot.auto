@@ -35,9 +35,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shootTillEmpty"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "wiggleIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootTillEmpty"
+                }
+              }
+            ]
           }
         },
         {
