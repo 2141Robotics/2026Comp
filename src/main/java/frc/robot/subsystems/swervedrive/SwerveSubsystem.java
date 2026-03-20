@@ -727,4 +727,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveDrive getSwerveDrive() {
     return swerveDrive;
   }
+
+  public Command rotateToAngle(double angleInDegrees){
+    return driveToPose(new Pose2d(new Translation2d(getPose().getMeasureX(), getPose().getMeasureY()), new Rotation2d(Units.degreesToRadians(angleInDegrees))));
+  }
 }

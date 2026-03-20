@@ -25,8 +25,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.auto.ShootAtHubCommand;
 import frc.robot.commands.auto.WiggleIntakeCommand;
 import frc.robot.subsystems.Intake;
@@ -243,6 +243,7 @@ public class RobotContainer {
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyroWithAlliance)));
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverXbox.b().whileTrue(drivebase.rotateToAngle((((int)drivebase.getHeading().getDegrees()) / 90) * 90 + 45));
       // TODO Make a drive over the bump command and bind it to the B button
       // driverXbox.b().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       // TODO Make a drive to a known pose command and bind it to the Y button
