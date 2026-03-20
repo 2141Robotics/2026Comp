@@ -31,6 +31,7 @@ public class Turret extends SubsystemBase {
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
     private boolean locked = false;
+    private double offset = 0.0;
 
     public Turret(SwerveSubsystem d) {
         this.drivebase = d;
@@ -48,14 +49,14 @@ public class Turret extends SubsystemBase {
         // With this factor, getPosition() returns degrees directly,
         // and setSetpoint() also expects degrees — no manual conversion needed.
         config.encoder
-            .positionConversionFactor(360.0 / TurretConstants.TURRET_GEAR_RATIO);
+                .positionConversionFactor(360.0 / TurretConstants.TURRET_GEAR_RATIO);
 
         // Use the built-in relative encoder (no external absolute encoder present).
         config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .p(TurretConstants.TURRET_KP)
-            .i(TurretConstants.TURRET_KI)
-            .d(TurretConstants.TURRET_KD);
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .p(TurretConstants.TURRET_KP)
+                .i(TurretConstants.TURRET_KI)
+                .d(TurretConstants.TURRET_KD);
 
         config.inverted(true);
 
@@ -84,6 +85,11 @@ public class Turret extends SubsystemBase {
 
     public void activateAdaptiveMode() {
         adaptiveMode = true;
+    }
+
+    public void deactivateAdaptiveMode() {
+        adaptiveMode = false;
+        turretDesiredAngle = 0.0;
     }
 
     public void setTarget(Translation2d t) {
@@ -116,28 +122,34 @@ public class Turret extends SubsystemBase {
         // --- Adaptive (field-relative target tracking) mode ------------------
         if (adaptiveMode && target != null) {
             turretDesiredAngle = ShooterMath.calculateAdaptiveTurretAngle(
-                drivebase.getPose(),
-                drivebase.getRobotVelocity(),
-                target
-            );
+                    drivebase.getPose(),
+                    drivebase.getRobotVelocity(),
+                    target);
 
             double staticAngle = ShooterMath.calculateAdaptiveTurretAngle(
-                drivebase.getPose(),
-                new ChassisSpeeds(),
-                target
-            );
+                    drivebase.getPose(),
+                    new ChassisSpeeds(),
+                    target);
             SmartDashboard.putNumber("Turret Angle Compensation", turretDesiredAngle - staticAngle);
         }
 
         // --- Soft limits -----------------------------------------------------
         if (turretDesiredAngle > TurretConstants.TURRET_MAX_ANGLE) {
             turretDesiredAngle = TurretConstants.TURRET_MAX_ANGLE;
-            if (adaptiveMode) SubsystemStates.outsideTurretRange = true;
+            if (adaptiveMode)
+                SubsystemStates.outsideTurretRange = true;
         } else if (turretDesiredAngle < TurretConstants.TURRET_MIN_ANGLE) {
             turretDesiredAngle = TurretConstants.TURRET_MIN_ANGLE;
-            if (adaptiveMode) SubsystemStates.outsideTurretRange = true;
+            if (adaptiveMode)
+                SubsystemStates.outsideTurretRange = true;
         } else {
             SubsystemStates.outsideTurretRange = false;
+        }
+
+        if(offset >  TurretConstants.TURRET_MAX_ANGLE) {
+            offset =  TurretConstants.TURRET_MAX_ANGLE;
+        } else if (offset < TurretConstants.TURRET_MIN_ANGLE) {
+            offset =  TurretConstants.TURRET_MIN_ANGLE;
         }
 
         // --- Send setpoint to closed-loop controller -------------------------
@@ -146,20 +158,31 @@ public class Turret extends SubsystemBase {
         // DEGREES_TO_ROTATIONS here, which was wrong — it would undo the
         // conversion factor and send a tiny fractional setpoint (~0.002),
         // making the motor think it was always nearly at its target.
+        double setpoint = turretDesiredAngle + offset;
+        if(setpoint > TurretConstants.TURRET_MAX_ANGLE) {
+            setpoint = TurretConstants.TURRET_MAX_ANGLE;
+        } else if (setpoint < TurretConstants.TURRET_MIN_ANGLE) {
+            setpoint = TurretConstants.TURRET_MIN_ANGLE;
+        }
         if (!locked) {
             turretMotor.getClosedLoopController().setSetpoint(
-                turretDesiredAngle,
-                ControlType.kPosition
-            );
+                    setpoint,
+                    ControlType.kPosition);
         }
         // --- Telemetry -------------------------------------------------------
+        SmartDashboard.putNumber("Turret Set Angle (deg)", setpoint);
         SmartDashboard.putNumber("Turret Desired Angle (deg)", turretDesiredAngle);
-        SmartDashboard.putNumber("Turret Actual Angle (deg)",  getActualAngleDegrees());
-        SmartDashboard.putNumber("Turret Angle Error (deg)",   turretDesiredAngle - getActualAngleDegrees());
-        SmartDashboard.putBoolean("Turret Adaptive Mode",      adaptiveMode);
+        SmartDashboard.putNumber("Offset", offset);
+        SmartDashboard.putNumber("Turret Actual Angle (deg)", getActualAngleDegrees());
+        SmartDashboard.putNumber("Turret Angle Error (deg)", turretDesiredAngle + offset - getActualAngleDegrees());
+        SmartDashboard.putBoolean("Turret Adaptive Mode", adaptiveMode);
     }
 
-    public void toggleLock(){
+    public void toggleLock() {
         locked = !locked;
+    }
+
+    public void changeOffset(double offset) {
+        this.offset += offset;
     }
 }

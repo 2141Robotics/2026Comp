@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.auto.ShootAtHubCommand;
 import frc.robot.commands.auto.WiggleIntakeCommand;
@@ -111,33 +112,35 @@ public class RobotContainer {
   SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
       .allianceRelativeControl(false);
 
-//   SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-//       () -> -driverXbox.getLeftY(),
-//       () -> -driverXbox.getLeftX())
-//       .withControllerRotationAxis(rightX)
-//       .deadband(OperatorConstants.DEADBAND)
-//       .scaleTranslation(OperatorConstants.DRIVER_CONTROLLER_JOYSTICK_SCALER)
-//       .allianceRelativeControl(true);
-//   // Derive the heading axis with math!
-//   SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
-//       .withControllerHeadingAxis(() -> Math.sin(
-//           driverXbox.getRawAxis(
-//               4) *
-//               Math.PI)
-//           *
-//           (Math.PI *
-//               2),
-//           () -> Math.cos(
-//               driverXbox.getRawAxis(
-//                   2) *
-//                   Math.PI)
-//               *
-//               (Math.PI *
-//                   2))
-//       .headingWhile(true)
-//       .translationHeadingOffset(true)
-//       .translationHeadingOffset(Rotation2d.fromDegrees(
-//           0));
+  // SwerveInputStream driveAngularVelocityKeyboard =
+  // SwerveInputStream.of(drivebase.getSwerveDrive(),
+  // () -> -driverXbox.getLeftY(),
+  // () -> -driverXbox.getLeftX())
+  // .withControllerRotationAxis(rightX)
+  // .deadband(OperatorConstants.DEADBAND)
+  // .scaleTranslation(OperatorConstants.DRIVER_CONTROLLER_JOYSTICK_SCALER)
+  // .allianceRelativeControl(true);
+  // // Derive the heading axis with math!
+  // SwerveInputStream driveDirectAngleKeyboard =
+  // driveAngularVelocityKeyboard.copy()
+  // .withControllerHeadingAxis(() -> Math.sin(
+  // driverXbox.getRawAxis(
+  // 4) *
+  // Math.PI)
+  // *
+  // (Math.PI *
+  // 2),
+  // () -> Math.cos(
+  // driverXbox.getRawAxis(
+  // 2) *
+  // Math.PI)
+  // *
+  // (Math.PI *
+  // 2))
+  // .headingWhile(true)
+  // .translationHeadingOffset(true)
+  // .translationHeadingOffset(Rotation2d.fromDegrees(
+  // 0));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -152,7 +155,8 @@ public class RobotContainer {
     initAutomonousChooser();
     drivebase.zeroGyro();
     NamedCommands.registerCommand("Test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("shootTillEmpty", new ShootAtHubCommand(shooter, turret, AutonConstants.MAX_SHOOTER_DOWNTIME));
+    NamedCommands.registerCommand("shootTillEmpty",
+        new ShootAtHubCommand(shooter, turret, AutonConstants.MAX_SHOOTER_DOWNTIME));
     NamedCommands.registerCommand("shootForever", new ShootAtHubCommand(shooter, turret, null));
     NamedCommands.registerCommand("deployIntake", Commands.runOnce(() -> intake.deployIntake(), intake));
     NamedCommands.registerCommand("retractIntake", Commands.runOnce(() -> intake.retractIntake(), intake));
@@ -187,10 +191,13 @@ public class RobotContainer {
     Command driveRobotOrientedAngularVelocity = drivebase.driveFieldOriented(driveRobotOriented);
     Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngle);
-    // Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-    // Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
-    // Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
-    //     driveDirectAngleKeyboard);
+    // Command driveFieldOrientedDirectAngleKeyboard =
+    // drivebase.driveFieldOriented(driveDirectAngleKeyboard);
+    // Command driveFieldOrientedAnglularVelocityKeyboard =
+    // drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
+    // Command driveSetpointGenKeyboard =
+    // drivebase.driveWithSetpointGeneratorFieldRelative(
+    // driveDirectAngleKeyboard);
 
     if (RobotBase.isSimulation()) {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
@@ -203,21 +210,22 @@ public class RobotContainer {
       Pose2d target = new Pose2d(new Translation2d(1, 4),
           Rotation2d.fromDegrees(90));
       drivebase.getSwerveDrive().field.getObject("targetPose").setPose(target);
-    //   driveDirectAngleKeyboard.driveToPose(() -> target,
-    //       new ProfiledPIDController(5,
-    //           0,
-    //           0,
-    //           new Constraints(5, 2)),
-    //       new ProfiledPIDController(5,
-    //           0,
-    //           0,
-    //           new Constraints(Units.degreesToRadians(360),
-    //               Units.degreesToRadians(180))));
+      // driveDirectAngleKeyboard.driveToPose(() -> target,
+      // new ProfiledPIDController(5,
+      // 0,
+      // 0,
+      // new Constraints(5, 2)),
+      // new ProfiledPIDController(5,
+      // 0,
+      // 0,
+      // new Constraints(Units.degreesToRadians(360),
+      // Units.degreesToRadians(180))));
       // driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new
       // Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-    //   driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-    //       () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
+      // driverXbox.button(2).whileTrue(Commands.runEnd(() ->
+      // driveDirectAngleKeyboard.driveToPoseEnabled(true),
+      // () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
 
     }
     if (DriverStation.isTest()) {
@@ -240,11 +248,16 @@ public class RobotContainer {
       // TODO Make a drive to a known pose command and bind it to the Y button
       // driverXbox.y().whileTrue(drivebase.driveToPoseCommand(new Pose2d(new
       // Translation2d(1, 4), Rotation2d.fromDegrees(90))));
-      // driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp, climber).repeatedly());
-      // driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown, climber).repeatedly());
-      // driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp, climber).repeatedly());
-      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown, climber).repeatedly());
-      // driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight, climber));
+      // driverXbox.povRight().whileTrue(Commands.runOnce(climber::moveUp,
+      // climber).repeatedly());
+      // driverXbox.povLeft().whileTrue(Commands.runOnce(climber::moveDown,
+      // climber).repeatedly());
+      // driverXbox.povUp().whileTrue(Commands.runOnce(climber::climberUp,
+      // climber).repeatedly());
+      // driverXbox.povDown().whileTrue(Commands.runOnce(climber::climberDown,
+      // climber).repeatedly());
+      // driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight,
+      // climber));
 
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
@@ -267,8 +280,10 @@ public class RobotContainer {
       operatorXbox.rightBumper().onTrue(
           Commands.runOnce(() -> turret.setTarget(FieldMeasurements.getHubPosition()), turret));
 
-      // operatorXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft, turret).repeatedly());
-      // operatorXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight, turret).repeatedly());
+      // operatorXbox.povLeft().whileTrue(Commands.runOnce(turret::turnLeft,
+      // turret).repeatedly());
+      // operatorXbox.povRight().whileTrue(Commands.runOnce(turret::turnRight,
+      // turret).repeatedly());
 
       operatorXbox.b().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
       operatorXbox.a().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
@@ -276,7 +291,13 @@ public class RobotContainer {
       operatorXbox.povDown().whileTrue(Commands.runOnce(intake::moveOut, intake).repeatedly());
       operatorXbox.povLeft().onTrue(Commands.runOnce(shooter::nudgeWeaker, shooter));
       operatorXbox.povRight().onTrue(Commands.runOnce(shooter::nudgeStronger, shooter));
-      operatorXbox.y().onTrue(Commands.runOnce(turret::toggleLock, turret));
+      operatorXbox.y().onTrue(Commands.runOnce(turret::deactivateAdaptiveMode, turret));
+      turret.setDefaultCommand(
+          Commands.run(
+              () -> turret.changeOffset(
+                  MathUtil.applyDeadband(operatorXbox.getRightX(), OperatorConstants.DEADBAND)
+                      * TurretConstants.TURRET_SPEED),
+              turret));
     }
   }
 
@@ -295,7 +316,7 @@ public class RobotContainer {
   }
 
   // public void climberUp() {
-  //   climber.climberUp();
+  // climber.climberUp();
   // }
 
   public void setLEDPattern(LEDPattern pattern) {

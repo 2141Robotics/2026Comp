@@ -143,7 +143,7 @@ public final class Constants {
 
   public static class TurretConstants {
     public static final int TURRET_MOTOR_PORT = 44;
-    public static final double TURRET_SPEED = 3.0; // Adjust as necessary
+    public static final double TURRET_SPEED = 1.0; // Adjust as necessary
     public static final double TURRET_KP = 0.01;
     public static final double TURRET_KI = 0;
     public static final double TURRET_KD = 0;
