@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.auto.ShootAtHubCommand;
 import frc.robot.commands.auto.WiggleIntakeCommand;
 import frc.robot.subsystems.Intake;
@@ -277,6 +276,7 @@ public class RobotContainer {
       operatorXbox.povDown().whileTrue(Commands.runOnce(intake::moveOut, intake).repeatedly());
       operatorXbox.povLeft().onTrue(Commands.runOnce(shooter::nudgeWeaker, shooter));
       operatorXbox.povRight().onTrue(Commands.runOnce(shooter::nudgeStronger, shooter));
+      operatorXbox.y().onTrue(Commands.runOnce(turret::toggleLock, turret));
     }
   }
 

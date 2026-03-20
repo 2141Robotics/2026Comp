@@ -30,6 +30,7 @@ public class Turret extends SubsystemBase {
 
     private final SwerveSubsystem drivebase;
     private Translation2d target = null;
+    private boolean locked = false;
 
     public Turret(SwerveSubsystem d) {
         this.drivebase = d;
@@ -145,15 +146,20 @@ public class Turret extends SubsystemBase {
         // DEGREES_TO_ROTATIONS here, which was wrong — it would undo the
         // conversion factor and send a tiny fractional setpoint (~0.002),
         // making the motor think it was always nearly at its target.
-        turretMotor.getClosedLoopController().setSetpoint(
-            turretDesiredAngle,
-            ControlType.kPosition
-        );
-
+        if (!locked) {
+            turretMotor.getClosedLoopController().setSetpoint(
+                turretDesiredAngle,
+                ControlType.kPosition
+            );
+        }
         // --- Telemetry -------------------------------------------------------
         SmartDashboard.putNumber("Turret Desired Angle (deg)", turretDesiredAngle);
         SmartDashboard.putNumber("Turret Actual Angle (deg)",  getActualAngleDegrees());
         SmartDashboard.putNumber("Turret Angle Error (deg)",   turretDesiredAngle - getActualAngleDegrees());
         SmartDashboard.putBoolean("Turret Adaptive Mode",      adaptiveMode);
+    }
+
+    public void toggleLock(){
+        locked = !locked;
     }
 }
