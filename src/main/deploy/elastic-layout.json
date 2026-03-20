@@ -223,6 +223,22 @@
               "red_start_time": 15,
               "yellow_start_time": 30
             }
+          },
+          {
+            "title": "Total Current",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/SmartDashboard/Total Current",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
           }
         ]
       }
