@@ -31,8 +31,8 @@ public class ShooterMath {
                 robotRelativeVelocity.vyMetersPerSecond).rotateBy(robotPose.getRotation());
         return initialVelocity.minus(robotVelocity);
     }
-private static double calculateDistanceToTarget(Pose2d robotPose, Translation2d target) {
-    return robotPose.getTranslation().getDistance(target);
+private static double calculateDistanceToTarget(Pose2d shooterCenter, Translation2d target) {
+    return shooterCenter.getTranslation().getDistance(target);
 }
     /**
      * 
