@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to Shoot Left"
+            "pathName": "Start to Shoot Right"
           }
         },
         {
@@ -19,11 +19,11 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left To Depot"
+            "pathName": "Right Shoot to Depot"
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -70,6 +70,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left",
+  "folder": "Right",
   "choreoAuto": false
 }

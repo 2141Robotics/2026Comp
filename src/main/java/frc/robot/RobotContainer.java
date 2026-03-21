@@ -160,7 +160,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("shootForever", new ShootAtHubCommand(shooter, turret, null));
     NamedCommands.registerCommand("deployIntake", Commands.runOnce(() -> intake.deployIntake(), intake));
     NamedCommands.registerCommand("retractIntake", Commands.runOnce(() -> intake.retractIntake(), intake));
-    NamedCommands.registerCommand("runIntake", Commands.runOnce(() -> intake.runIntake(), intake));
+    NamedCommands.registerCommand("runIntake", 
+    Commands.run(() -> intake.runIntake(), intake));
     NamedCommands.registerCommand("wiggleIntake", new WiggleIntakeCommand(intake));
   }
 

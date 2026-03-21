@@ -201,8 +201,8 @@ public final class Constants {
     // public static final int CLIMBER_CURRENT_LIMIT = 80;
     public static final int SHOOTER_CURRENT_LIMIT = 30;
     public static final int TURRET_CURRENT_LIMIT = 20;
-    public static final int INTAKE_CURRENT_LIMIT = 50;
-    public static final int INTAKE_ARM_CURRENT_LIMIT = 10;
+    public static final int INTAKE_CURRENT_LIMIT = 65;
+    public static final int INTAKE_ARM_CURRENT_LIMIT = 8;
     public static final int KICKER_CURRENT_LIMIT = 20;
     public static final int INDEXER_CURRENT_LIMIT = 40;
     public static final double INDEXER_CURRENT_JIGGLE_LIMIT = INDEXER_CURRENT_LIMIT * 0.75; // If the indexer current is above this threshold, it is likely that a ball is stuck and the indexer should reverse to jiggle it free

@@ -43,10 +43,10 @@ public final class WiggleIntakeCommand extends Command{
   public void execute() {
     wiggleTimer++;
     if
-    (wiggleTimer < 10) {
+    (wiggleTimer < 200) {
       intake.runIntake();
-      intake.setAngle(IntakeConstants.INTAKE_ARM_MAX_POSITION/2.0);
-    } else if (wiggleTimer < 20) {
+      intake.retractIntake();
+    } else if (wiggleTimer < 400) {
       intake.deployIntake();
     } else {
       wiggleTimer = 0;

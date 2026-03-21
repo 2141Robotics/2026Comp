@@ -84,6 +84,11 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         super.periodic();
         intakeMotor.set(0.0);
+        if(armDesiredPosition < IntakeConstants.INTAKE_ARM_MAX_POSITION){
+            armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
+        }else if(armDesiredPosition > IntakeConstants.INTAKE_ARM_MIN_POSITION){
+            armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
+        }
         intakeArmMotor.getClosedLoopController().setSetpoint(armDesiredPosition, ControlType.kPosition);
         SmartDashboard.putBoolean("Intake Arm Deployed", isArmDeployed);
         SmartDashboard.putNumber("Intake Arm Desired Position", armDesiredPosition);
