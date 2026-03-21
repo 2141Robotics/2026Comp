@@ -241,9 +241,9 @@ public class RobotContainer {
     } else {
       // Teleop Controls
 
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyroWithAlliance)));
+      //driverXbox.a().onTrue(());
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.b().whileTrue(drivebase.rotateToAngle((((int)drivebase.getHeading().getDegrees()) / 90) * 90 + 45));
+      driverXbox.a().whileTrue(drivebase.rotateToAngle((((int)drivebase.getHeading().getDegrees()) / 90) * 90 + 45));
       // TODO Make a drive over the bump command and bind it to the B button
       // driverXbox.b().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       // TODO Make a drive to a known pose command and bind it to the Y button
@@ -260,8 +260,8 @@ public class RobotContainer {
       // driverXbox.leftBumper().onTrue(Commands.runOnce(climber::resetHeight,
       // climber));
 
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
+      driverXbox.start().onTrue(Commands.runOnce(drivebase::zeroGyroWithAlliance));
+      driverXbox.back().onTrue(Commands.runOnce(drivebase::zeroGyroWithAlliance));
 
       operatorXbox.leftBumper().onTrue(Commands.runOnce(shooter::toggleAdaptiveShooting, shooter));
       operatorXbox.leftBumper().onTrue(Commands.runOnce(turret::activateAdaptiveMode, turret));
@@ -287,12 +287,13 @@ public class RobotContainer {
       // turret).repeatedly());
 
       operatorXbox.b().whileTrue(Commands.runOnce(intake::runIntake, intake).repeatedly());
+      operatorXbox.x().whileTrue(Commands.runOnce(intake::spitIntake, intake).repeatedly());
       operatorXbox.a().onTrue(Commands.runOnce(intake::toggleDeployment, intake));
+      operatorXbox.y().onTrue(Commands.runOnce(turret::deactivateAdaptiveMode, turret));
       operatorXbox.povUp().whileTrue(Commands.runOnce(intake::moveIn, intake).repeatedly());
       operatorXbox.povDown().whileTrue(Commands.runOnce(intake::moveOut, intake).repeatedly());
       operatorXbox.povLeft().onTrue(Commands.runOnce(shooter::nudgeWeaker, shooter));
       operatorXbox.povRight().onTrue(Commands.runOnce(shooter::nudgeStronger, shooter));
-      operatorXbox.y().onTrue(Commands.runOnce(turret::deactivateAdaptiveMode, turret));
       turret.setDefaultCommand(
           Commands.run(
               () -> turret.changeOffset(

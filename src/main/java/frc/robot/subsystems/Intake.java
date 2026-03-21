@@ -45,6 +45,10 @@ public class Intake extends SubsystemBase {
         intakeMotor.set(IntakeConstants.INTAKE_RUN_SPEED);
     }
 
+    public void spitIntake() {
+        intakeMotor.set(-IntakeConstants.INTAKE_RUN_SPEED);
+    }
+
     public void toggleDeployment() {
         isArmDeployed = !isArmDeployed;
         armDesiredPosition = isArmDeployed 
