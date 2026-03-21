@@ -58,16 +58,16 @@ public class Intake extends SubsystemBase {
 
     public void moveOut() {
         armDesiredPosition += IntakeConstants.INTAKE_ARM_MANUAL_SPEED;
-        if (armDesiredPosition > IntakeConstants.INTAKE_ARM_MIN_POSITION) {
-            armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
-        }
+        // if (armDesiredPosition > IntakeConstants.INTAKE_ARM_MIN_POSITION) {
+        //     armDesiredPosition = IntakeConstants.INTAKE_ARM_MIN_POSITION;
+        // }
     }
 
     public void moveIn() {
         armDesiredPosition -= IntakeConstants.INTAKE_ARM_MANUAL_SPEED;
-        if (armDesiredPosition < IntakeConstants.INTAKE_ARM_MAX_POSITION) {
-            armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
-        }
+        // if (armDesiredPosition < IntakeConstants.INTAKE_ARM_MAX_POSITION) {
+        //     armDesiredPosition = IntakeConstants.INTAKE_ARM_MAX_POSITION;
+        // }
     }
 
     public void deployIntake() {
